@@ -14,9 +14,10 @@
   "author": "Swizz <gerodel.quentin@gmail.com>",
   "license": "MIT",
   "repository": "git@github.com:Swizz/snabbdom-pragma.git",
-  "main": "index.js",
+  "main": "dist/index.js",
   "devDependencies": {
     "ava": "^0.17.0",
+    "babel-plugin-transform-react-jsx": "^6.8.0",
     "buble": "^0.15.2",
     "rollup": "^0.41.3"
   },
