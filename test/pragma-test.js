@@ -4,7 +4,7 @@ import test from 'ava'
 import path from 'path'
 import fs from 'fs'
 
-const fixturesDir = path.join(__dirname, 'pragma-test')
+const fixturesDir = path.join(__dirname, 'pragma-specs')
 
 fs.readdirSync(fixturesDir).map( caseName => {
 
