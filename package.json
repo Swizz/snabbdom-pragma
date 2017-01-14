@@ -2,6 +2,15 @@
   "name": "snabbdom-pragma",
   "version": "0.6.0",
   "description": "'NotReact.createElement' pragma although for snabbdom",
+  "keywords": [
+    "snabbdom",
+    "pragma",
+    "jsx",
+    "createElement",
+    "Bublé",
+    "Buble",
+    "Babel"
+  ],
   "author": "Swizz <gerodel.quentin@gmail.com>",
   "license": "MIT",
   "repository": "git@github.com:Swizz/snabbdom-pragma.git",
