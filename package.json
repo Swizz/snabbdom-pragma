@@ -4,22 +4,19 @@
   "description": "'NotReact.createElement' pragma although for snabbdom",
   "author": "Swizz <gerodel.quentin@gmail.com>",
   "license": "MIT",
-
   "repository": "git@github.com:Swizz/snabbdom-pragma.git",
-
   "main": "index.js",
-
   "devDependencies": {
     "ava": "^0.17.0",
     "buble": "^0.15.2"
   },
   "dependencies": {
+    "extend": "^3.0.0",
     "snabbdom": "^0.6.1"
   },
   "scripts": {
     "test": "ava"
   },
-
   "ava": {
     "files": [
       "test/*-test.js"
@@ -29,6 +26,9 @@
     ]
   },
   "babel": {
-    "presets": ["es2015", "stage-2"]
+    "presets": [
+      "es2015",
+      "stage-2"
+    ]
   }
 }
