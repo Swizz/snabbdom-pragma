@@ -3,6 +3,6 @@ import h from 'snabbdom/h'
 
 export default () => {
 
-  return h('div', "Hello World")
+  return h('div', { attr1: 1, attr2: 2}, [])
 
 }
