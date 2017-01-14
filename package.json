@@ -1,21 +1,36 @@
 {
   "name": "snabbdom-pragma",
-  "version": "0.6.0",
+  "version": "1.5.0",
   "description": "'NotReact.createElement' pragma although for snabbdom",
+  "keywords": [
+    "snabbdom",
+    "pragma",
+    "jsx",
+    "createElement",
+    "Bublé",
+    "Buble",
+    "Babel"
+  ],
   "author": "Swizz <gerodel.quentin@gmail.com>",
   "license": "MIT",
   "repository": "git@github.com:Swizz/snabbdom-pragma.git",
-  "main": "index.js",
+  "main": "dist/index.js",
   "devDependencies": {
     "ava": "^0.17.0",
-    "buble": "^0.15.2"
+    "babel-plugin-transform-react-jsx": "^6.8.0",
+    "buble": "^0.15.2",
+    "rollup": "^0.41.3"
   },
   "dependencies": {
     "extend": "^3.0.0",
     "snabbdom": "^0.6.1"
   },
   "scripts": {
-    "test": "ava"
+    "test": "./node_modules/.bin/ava",
+    "transpile": "./node_modules/.bin/buble -i src/ -o dist/ --no modules",
+    "modules": "./node_modules/.bin/rollup -i dist/index.js -o dist/index.js -f cjs",
+    "build": "npm run transpile ; npm run modules",
+    "prepublish": "npm run build"
   },
   "ava": {
     "files": [
