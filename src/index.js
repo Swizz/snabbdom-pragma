@@ -14,7 +14,7 @@ const sanitizeChilds = (children) => {
 
 }
 
-export const createElement = (type, props={}, ...children) => {
+export const createElement = (type, props, ...children) => {
 
   return h(type, sanitizeProps(props), sanitizeChilds(children))
 
