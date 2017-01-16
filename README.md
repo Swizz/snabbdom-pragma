@@ -47,6 +47,14 @@ babel.transform(input, {
 });
 ```
 
+### Traceur
+[`snabbdom-pragma`](/Swizz/snabbdom-pragma) is fully tested for [Traceur](/google/traceur-compiler)
+```js
+traceur.compile(input, {
+  jsx: 'Snabbdom.createElement'
+});
+```
+
 ## Misc
 
 - [`snabbdom-pragma`](/Swizz/snabbdom-pragma) follows the [Compatible Versioning: major.minor only](https://github.com/staltz/comver) convention.
