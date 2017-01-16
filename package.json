@@ -19,7 +19,8 @@
     "ava": "^0.17.0",
     "babel-plugin-transform-react-jsx": "^6.8.0",
     "buble": "^0.15.2",
-    "rollup": "^0.41.3"
+    "rollup": "^0.41.3",
+    "traceur": "^0.0.111"
   },
   "dependencies": {
     "extend": "^3.0.0",

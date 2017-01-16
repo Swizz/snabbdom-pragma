@@ -1,7 +1,7 @@
 
 import Snabbdom from '../../../src/index'
 
-export default function () {
+export default () => {
 
   return Snabbdom.createElement( 'div', null, "Hello World" )
 
