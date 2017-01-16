@@ -17,7 +17,8 @@ fs.readdirSync(fixturesDir).map( caseName => {
         path.join(fixtureDir, 'actual.js')
       ).toString(), {
         transforms: {
-          modules: false
+          modules: false,
+          arrow: false
         },
         jsx: 'Snabbdom.createElement'
       }
