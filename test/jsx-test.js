@@ -52,4 +52,25 @@ fs.readdirSync(fixturesDir).map( caseName => {
     t.is(actual.trim(), transform.trim())
   })
 
+  test(`Should Traceur transform ${caseName.split('-').join(' ')}`, t => {
+
+    const fixtureDir = path.join(fixturesDir, caseName)
+
+    const actual = require('traceur').compile(
+      fs.readFileSync(
+        path.join(fixtureDir, 'actual.js')
+      ).toString(), {
+        jsx: 'Snabbdom.createElement',
+        modules: false,
+        outputLanguage: 'es6'
+      }
+    )
+
+    const transform = fs.readFileSync(
+      path.join(fixtureDir, 'transform-traceur.js')
+    ).toString()
+
+    t.is(actual.trim(), transform.trim())
+  })
+
 })
