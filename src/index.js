@@ -36,8 +36,19 @@ const sanitizeProps = (props) => {
 
 const sanitizeChilds = (children) => {
 
-  return children.length === 1 && typeof children[0] === 'string' ?
-    children[0] : children
+  if (children.length === 1 && typeof children[0] === 'string') {
+
+    return children[0]
+
+  }
+  if (children.reduce((acc, curr) => acc || Array.isArray(curr), false)) {
+
+    return children
+      .reduce((acc, curr) => Array.isArray(curr) ? [...acc, ...curr] : [...acc, curr], [])
+
+  }
+
+  return children
 
 }
 
