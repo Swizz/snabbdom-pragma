@@ -59,3 +59,4 @@ traceur.compile(input, {
 
 - [`snabbdom-pragma`](/Swizz/snabbdom-pragma) follows the [Compatible Versioning: major.minor only](https://github.com/staltz/comver) convention.
 - [Release notes](https://github.com/Swizz/snabbdom-pragma/releases) are [Keep a Changelog](http://keepachangelog.com/en/0.3.0/) compliants.
+- SVG capable thanks to @jvanbruegge PR#4

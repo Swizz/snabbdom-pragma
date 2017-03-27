@@ -7,29 +7,37 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 var h = _interopDefault(require('snabbdom/h'));
 var extend = _interopDefault(require('extend'));
 
+var svgTags = [
+  'svg', 'circle', 'ellipse', 'line', 'polygon', 'polyline', 'rect', 'g', 'path', 'text'
+];
+
 var sanitizeProps = function (props) {
 
   props = props === null ? {} : props;
 
   Object.keys(props).map(function (prop) {
+
     var keysRiver = prop.split('-').reverse();
 
-    if(keysRiver.length > 1) {
+    if (keysRiver.length > 1) {
+
       var newObject = keysRiver.reduce(
         function (object, key) { return (( obj = {}, obj[key] = object, obj ))
           var obj; },
         props[prop]
       );
       extend(true, props, newObject);
-
       delete props[prop];
-    }
-    else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key'].indexOf(prop) > -1)) {
-      extend(true, props, {props: ( obj = {}, obj[prop] = props[prop], obj ) });
+
+    } else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key'].indexOf(prop) > -1)) {
+
+      extend(true, props, { props: ( obj = {}, obj[prop] = props[prop], obj ) });
       var obj;
-
       delete props[prop];
+
     }
+
+    return { toto: true }
 
   });
 
@@ -39,8 +47,41 @@ var sanitizeProps = function (props) {
 
 var sanitizeChilds = function (children) {
 
-  return children.length === 1 && typeof children[0] === 'string' ?
-    children[0] : children
+  if (children.length === 1 && typeof children[0] === 'string') {
+
+    return children[0]
+
+  }
+  if (children.reduce(function (acc, curr) { return acc || Array.isArray(curr); }, false)) {
+
+    return children
+      .reduce(function (acc, curr) { return Array.isArray(curr) ? acc.concat( curr) : acc.concat( [curr]); }, [])
+
+  }
+
+  return children
+
+};
+
+var considerSVG = function (props, type) {
+
+  if (svgTags.indexOf(type) > -1) {
+
+    var attrs = Object.assign({}, props.props, props.props.className ? { class: props.props.className } : undefined);
+
+    var p = Object.assign({}, props, { attrs: attrs });
+
+    if (p.attrs.className) {
+
+      delete p.attrs.className;
+
+    }
+
+    delete p.props;
+    return p
+
+  }
+  return props
 
 };
 
@@ -49,13 +90,11 @@ var createElement = function (type, props) {
   while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
 
 
-
   return (typeof type === 'function') ?
     type(props, children) :
-    h(type, sanitizeProps(props), sanitizeChilds(children))
+    h(type, considerSVG(sanitizeProps(props), type), sanitizeChilds(children))
 
 };
-
 
 var index = {
   createElement: createElement

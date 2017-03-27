@@ -3,6 +3,6 @@ import { createElement } from '../../../src/index'
 
 export default () => {
 
-  return createElement('div', { 'style-color': 'red' })
+  return createElement('circle', { cx: 43.5, cy: 23, r: 5 })
 
 }
