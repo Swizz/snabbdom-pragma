@@ -1,8 +1,8 @@
 
-import Snabbdom from '../../../src/index'
+// import Snabbdom from '../../../src/index'
 
 export default () => {
 
-  return <input type='text'/>
+  return <input type="text"/>
 
 }

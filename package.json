@@ -17,20 +17,23 @@
   "main": "dist/index.js",
   "devDependencies": {
     "ava": "^0.17.0",
+    "babel-core": "^6.24.0",
     "babel-plugin-transform-react-jsx": "^6.8.0",
     "buble": "^0.15.2",
     "rollup": "^0.41.3",
-    "traceur": "^0.0.111"
+    "traceur": "^0.0.111",
+    "xo": "^0.17.1"
   },
   "dependencies": {
     "extend": "^3.0.0",
     "snabbdom": "^0.6.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/ava",
+    "test": "./node_modules/.bin/xo && ./node_modules/.bin/ava",
     "transpile": "./node_modules/.bin/buble -i src/ -o dist/ --no modules",
     "modules": "./node_modules/.bin/rollup -i dist/index.js -o dist/index.js -f cjs",
-    "build": "npm run transpile ; npm run modules",
+    "assets": "cp src/assets/* dist/",
+    "build": "npm run transpile ; npm run modules ; npm assets",
     "prepublish": "npm run build"
   },
   "ava": {
@@ -39,6 +42,31 @@
     ],
     "require": [
       "babel-register"
+    ]
+  },
+  "xo": {
+    "semicolon": false,
+    "space": true,
+    "rules": {
+      "padded-blocks": [
+        "error",
+        "always"
+      ],
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "arrow-parens": [
+        "error",
+        "always"
+      ],
+      "import/no-named-as-default-member": "off",
+      "import/prefer-default-export": "off",
+      "import/no-dynamic-require": "off"
+    },
+    "ignores": [
+      "test/**/expected.js",
+      "test/**/transform-*.js"
     ]
   },
   "babel": {

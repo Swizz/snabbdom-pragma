@@ -1,14 +1,13 @@
-
-import test from 'ava'
-
 import path from 'path'
 import fs from 'fs'
 
+import test from 'ava'
+
 const fixturesDir = path.join(__dirname, 'jsx-specs')
 
-fs.readdirSync(fixturesDir).map( caseName => {
+fs.readdirSync(fixturesDir).forEach((caseName) => {
 
-  test(`Should Bublé transform ${caseName.split('-').join(' ')}`, t => {
+  test(`Should Bublé transform ${caseName.split('-').join(' ')}`, (t) => {
 
     const fixtureDir = path.join(fixturesDir, caseName)
 
@@ -29,9 +28,10 @@ fs.readdirSync(fixturesDir).map( caseName => {
     ).toString()
 
     t.is(actual.trim(), transform.trim())
+
   })
 
-  test(`Should Babel transform ${caseName.split('-').join(' ')}`, t => {
+  test(`Should Babel transform ${caseName.split('-').join(' ')}`, (t) => {
 
     const fixtureDir = path.join(fixturesDir, caseName)
 
@@ -40,7 +40,7 @@ fs.readdirSync(fixturesDir).map( caseName => {
         path.join(fixtureDir, 'actual.js')
       ).toString(), {
         plugins: [
-          ["transform-react-jsx", {"pragma": "Snabbdom.createElement"}]
+          ['transform-react-jsx', { pragma: 'Snabbdom.createElement' }]
         ]
       }
     ).code
@@ -50,9 +50,10 @@ fs.readdirSync(fixturesDir).map( caseName => {
     ).toString()
 
     t.is(actual.trim(), transform.trim())
+
   })
 
-  test(`Should Traceur transform ${caseName.split('-').join(' ')}`, t => {
+  test(`Should Traceur transform ${caseName.split('-').join(' ')}`, (t) => {
 
     const fixtureDir = path.join(fixturesDir, caseName)
 
@@ -71,6 +72,7 @@ fs.readdirSync(fixturesDir).map( caseName => {
     ).toString()
 
     t.is(actual.trim(), transform.trim())
+
   })
 
 })

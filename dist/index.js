@@ -12,24 +12,28 @@ var sanitizeProps = function (props) {
   props = props === null ? {} : props;
 
   Object.keys(props).map(function (prop) {
+
     var keysRiver = prop.split('-').reverse();
 
-    if(keysRiver.length > 1) {
+    if (keysRiver.length > 1) {
+
       var newObject = keysRiver.reduce(
         function (object, key) { return (( obj = {}, obj[key] = object, obj ))
           var obj; },
         props[prop]
       );
       extend(true, props, newObject);
-
       delete props[prop];
-    }
-    else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key'].indexOf(prop) > -1)) {
-      extend(true, props, {props: ( obj = {}, obj[prop] = props[prop], obj ) });
+
+    } else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key'].indexOf(prop) > -1)) {
+
+      extend(true, props, { props: ( obj = {}, obj[prop] = props[prop], obj ) });
       var obj;
-
       delete props[prop];
+
     }
+
+    return { toto: true }
 
   });
 
@@ -49,13 +53,11 @@ var createElement = function (type, props) {
   while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
 
 
-
   return (typeof type === 'function') ?
     type(props, children) :
     h(type, sanitizeProps(props), sanitizeChilds(children))
 
 };
-
 
 var index = {
   createElement: createElement

@@ -1,5 +1,7 @@
 
-import Snabbdom from '../../../src/index'
+// import Snabbdom from '../../../src/index'
+
+var isVisible = () => {}
 
 export default () => {
 
