@@ -44,7 +44,9 @@ const sanitizeChilds = (children) => {
 const considerSVG = (props, type) => {
 
     if(svgTags.indexOf(type) > -1) {
-        let p = Object.assign({}, props, { attrs: props.props });
+        const attrs = Object.assign({}, props.props, props.props.className ? { class: props.props.className } : undefined);
+        let p = Object.assign({}, props, { attrs: attrs })
+        if(p.attrs.className) { delete p.attrs.className; }
         delete p.props;
         return p;
     }
