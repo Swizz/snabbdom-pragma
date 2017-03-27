@@ -3,7 +3,7 @@ import h from 'snabbdom/h'
 import extend from 'extend'
 
 const svgTags = [
-    'svg', 'circle', 'ellipse', 'line', 'polygon', 'polyline', 'rect', 'g', 'path', 'text'
+  'svg', 'circle', 'ellipse', 'line', 'polygon', 'polyline', 'rect', 'g', 'path', 'text'
 ]
 
 const sanitizeProps = (props) => {
@@ -47,15 +47,24 @@ const sanitizeChilds = (children) => {
 
 const considerSVG = (props, type) => {
 
-    if(svgTags.indexOf(type) > -1) {
-        const attrs = Object.assign({}, props.props, props.props.className ? { class: props.props.className } : undefined);
-        let p = Object.assign({}, props, { attrs: attrs })
-        if(p.attrs.className) { delete p.attrs.className; }
-        delete p.props;
-        return p;
+  if (svgTags.indexOf(type) > -1) {
+
+    const attrs = Object.assign({}, props.props, props.props.className ? { class: props.props.className } : undefined)
+
+    let p = Object.assign({}, props, { attrs: attrs })
+
+    if (p.attrs.className) {
+
+      delete p.attrs.className
+
     }
-    return props;
-        
+
+    delete p.props
+    return p
+
+  }
+  return props
+
 }
 
 export const createElement = (type, props, ...children) => {
