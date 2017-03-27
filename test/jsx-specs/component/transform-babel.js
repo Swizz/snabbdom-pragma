@@ -1,9 +1,10 @@
 
-import Snabbdom from '../../../src/index';
+// import Snabbdom from '../../../src/index'
 
 export default (() => {
 
-  const Component = name => Snabbdom.createElement(
+  const Component = name => // eslint-disable-line no-unused-vars
+  Snabbdom.createElement(
     "div",
     null,
     "Hello ",

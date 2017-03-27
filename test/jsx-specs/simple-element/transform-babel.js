@@ -1,11 +1,11 @@
 
-import Snabbdom from '../../../src/index';
+// import Snabbdom from '../../../src/index'
 
 export default (() => {
 
   return Snabbdom.createElement(
-    'div',
+    "div",
     null,
-    'Hello World'
+    "Hello World"
   );
 });
