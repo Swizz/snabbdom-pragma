@@ -17,7 +17,8 @@ fs.readdirSync(fixturesDir).forEach((caseName) => {
       ).toString(), {
         transforms: {
           modules: false,
-          arrow: false
+          arrow: false,
+          parameterDestructuring: false
         },
         jsx: 'Snabbdom.createElement'
       }
