@@ -15,7 +15,7 @@
 
 <br/>
 
-Snabbdom-pragma is the favorite way to use the [Facebook JSX](https://facebook.github.io/jsx/) syntax with the virtual DOM library [Snabbdom](https://github.com/snabbdom/snabbdom). Based on many principles, snabbdom-pragma, aim to handle the same api as [React.createElement](https://facebook.github.io/react/docs/react-api.html#createelement) to take all benefits from the most used transpilers proven by the wider React community.
+Snabbdom-pragma is the favorite way to use the [Facebook JSX](https://facebook.github.io/jsx/) syntax with the virtual DOM library [Snabbdom](https://github.com/snabbdom/snabbdom). Based on many principles, Snabbdom-pragma, aim to handle the same API as [React.createElement](https://facebook.github.io/react/docs/react-api.html#createelement) to take all benefits from the most used transpilers proven by the wider React community.
 
 Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/snabbdom/snabbdom), [Facebook JSX](https://facebook.github.io/jsx/), and [React.createElement](https://facebook.github.io/react/docs/react-api.html#createelement) specs with some grounded tests.
 
@@ -44,7 +44,7 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
 
 ## Getting started
 
-- **1.** To use snabbdom-pragma you need to download it thanks to your favorite JavaScript Package Manager.
+- **1.** To use Snabbdom-pragma you need to download it thanks to your favorite JavaScript Package Manager.
   ```sh
   yarn add snabbdom-pragma
   ```
@@ -75,7 +75,7 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
 ## Usage
 
 ### Bublé
-snabbdom-pragma works fine and is fully tested for [Bublé](https://buble.surge.sh/guide/).
+Snabbdom-pragma works fine and is fully tested for [Bublé](https://buble.surge.sh/guide/).
 ```js
 buble.transform(input, {
   jsx: 'Snabbdom.createElement'
@@ -83,7 +83,7 @@ buble.transform(input, {
 ```
 
 ### Babel
-snabbdom-pragma works fine and is fully tested for [Babel](https://babeljs.io) with the
+Snabbdom-pragma works fine and is fully tested for [Babel](https://babeljs.io) with the
 [transform-react-jsx](https://babeljs.io/docs/plugins/transform-react-jsx/) plugin enabled.
 ```js
 babel.transform(input, {
@@ -94,7 +94,7 @@ babel.transform(input, {
 ```
 
 ### Traceur
-snabbdom-pragma works fine and is fully tested for [Traceur](https://github.com/google/traceur-compiler).
+Snabbdom-pragma works fine and is fully tested for [Traceur](https://github.com/google/traceur-compiler).
 ```js
 traceur.compile(input, {
   jsx: 'Snabbdom.createElement'
@@ -102,12 +102,12 @@ traceur.compile(input, {
 ```
 
 ## JSX Features
-Thanks to your Transpiler, JSX tags will be transpiled into `NotReact.createElement` function following the `React.creatElement` specifications.
+Thanks to your transpiler, JSX tags will be transpiled into `NotReact.createElement` function following the `React.creatElement` specifications.
 
 ### Elements
-As `Snabbdom.createElement` is a straightforward mapping to `Snabbdom/h`, HTML elements will works out of the box.
+As `Snabbdom.createElement` is a straightforward mapping to `Snabbdom/h`, HTML elements will work out of the box.
 ```js
-/* Writen */
+/* written */
 const vnode = <div>Hello World</div>
 
 /* Once Transpiled */
@@ -118,9 +118,9 @@ const vnode = h('div', {}, 'Hello World')
 ```
 
 ### Attributes
-By default, attributes will be entrust to the `props` module (see [Modules Features](#modules-object))
+By default, attributes will be entrust to the `props` module. (see [Modules Features](#modules-object))
 ```js
-/* Writen */
+/* written */
 const vnode = <input type="text"/>
 
 /* Once Transpiled */
@@ -131,9 +131,9 @@ const vnode = h('input', { props: { type: 'text' } }, [])
 ```
 
 ### SVG
-SVG tags works without any configuration, but attributes will only works with the `attrs` module
+SVG tags work without any configuration, but attributes will only work with the `attrs` module.
 ```js
-/* Writen */
+/* written */
 const vnode = <circle cx="43.5" cy="23" r="5"/>
 
 /* Once Transpiled */
@@ -144,14 +144,14 @@ const vnode = h('circle', { attrs: { cx: 43.5, cy: 23, r: 5 } }, [])
 ```
 
 ## Snabbdom Features
-In Snabbdom, functionalities is delegated to separates modules. Like `hook` (lifecycle), `on` (events), `style`, `props`, etc...
+In Snabbdom, functionalities is delegated to separate modules. Like `hook` (lifecycle), `on` (events), `style`, `props`, etc...
 Snabbdom-pragma give you two ways to use these modules.
 
 ### Modules object
-You can deal with modules properties with an object
+You can deal with modules properties with an object.
 ```js
-/* Writen */
-const vnode = <div style="{ color: 'red', fontWeight: 'bold' }"></div>
+/* written */
+const vnode = <div style={{ color: 'red', fontWeight: 'bold' }}></div>
 
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('div', { style: { color: 'red', fontWeight: 'bold' } })
@@ -161,9 +161,9 @@ const vnode = h('div', { style: { color: 'red', fontWeight: 'bold' } }, [])
 ```
 
 ### Modules attribute
-Or by using the `MODULE-PROPERTY` attribute
+Or by using the `MODULE-PROPERTY` attribute.
 ```js
-/* Writen */
+/* written */
 const vnode = <button on-click={ callback }/>
 
 /* Once Transpiled */
@@ -179,7 +179,7 @@ In React you can create components and use them inside other components, using t
 ### Components
 Snabbdom-pragma use simple functions as component of type `(attributes, children) => vnode`.
 ```js
-/* Writen */
+/* written */
 const Component = (name) =>
   <div>Hello { name }</div>
 
@@ -201,7 +201,8 @@ As in React, components function need to start with a capital letter, while regu
 
 ## Misc
 
-- snabbdom-pragma follows the [Compatible Versioning: major.minor only](https://github.com/staltz/comver) convention.
+- Snabbdom-pragma follows the [Compatible Versioning: major.minor only](https://github.com/staltz/comver) convention.
 - [Release notes](https://github.com/Swizz/snabbdom-pragma/releases) are [Keep a Changelog](http://keepachangelog.com/en/0.3.0/) compliants.
 - SVG capable thanks to @jvanbruegge PR#4
-- Documentation styling stolen at the [fly js](https://github.com/flyjs/fly) project
+- Documentation styling have been stolen to the [FlyJS](https://github.com/flyjs/fly) project
+- Some part are shameless copy of the [Snabbdom-jsx](https://github.com/yelouafi/snabbdom-jsx) documentation
