@@ -11,11 +11,40 @@ var svgTags = [
   'svg', 'circle', 'ellipse', 'line', 'polygon', 'polyline', 'rect', 'g', 'path', 'text'
 ];
 
+var considerDataAria = function (props) {
+
+  Object.keys(props).forEach(function (module) {
+
+    if (['data', 'aria'].indexOf(module) > -1) {
+
+      Object.keys(props[module]).forEach(function (prop) {
+
+        props.attrs = props.attrs || {};
+
+        props.attrs[(module + "-" + prop)] = props[module][prop];
+        delete props[module][prop];
+
+      });
+
+      if (Object.keys(props[module]).length === 0) {
+
+        delete props[module];
+
+      }
+
+    }
+
+  });
+
+  return props
+
+};
+
 var sanitizeProps = function (props) {
 
   props = props === null ? {} : props;
 
-  Object.keys(props).map(function (prop) {
+  Object.keys(props).forEach(function (prop) {
 
     var keysRiver = prop.split('-').reverse();
 
@@ -29,7 +58,7 @@ var sanitizeProps = function (props) {
       extend(true, props, newObject);
       delete props[prop];
 
-    } else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key'].indexOf(prop) > -1)) {
+    } else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key', 'data', 'aria'].indexOf(prop) > -1)) {
 
       extend(true, props, { props: ( obj = {}, obj[prop] = props[prop], obj ) });
       var obj;
@@ -37,11 +66,9 @@ var sanitizeProps = function (props) {
 
     }
 
-    return { toto: true }
-
   });
 
-  return props
+  return considerDataAria(props)
 
 };
 
