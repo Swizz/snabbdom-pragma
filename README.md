@@ -1,7 +1,19 @@
-# Snabbdom-pragma
-Well tested `NotReact.createElement` pragma although for Snabbdom !
+<h1 align="center"> Snabbdom-pragma </h1>
 
-[![npm version](https://img.shields.io/npm/v/snabbdom-pragma.svg?style=flat-square)](https://www.npmjs.com/package/snabbdom-pragma) [![mit license](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](https://github.com/Swizz/snabbdom-pragma/blob/master/LICENSE.md)
+<div align="center">
+  Well tested <code>NotReact.createElement</code> pragma although for Snabbdom !
+</div>
+
+<div align="center">
+  <a href="https://www.npmjs.com/package/snabbdom-pragma">
+    <img src="https://img.shields.io/npm/v/snabbdom-pragma.svg?style=flat-square" alt="npm version"/>
+  </a>
+  <a href="https://github.com/Swizz/snabbdom-pragma/blob/master/LICENSE.md">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="mit license"/>
+  </a>
+</div>
+
+<br/>
 
 Snabbdom-pragma is the favorite way to use the [Facebook JSX](https://facebook.github.io/jsx/) syntax with the virtual DOM library [Snabbdom](https://github.com/snabbdom/snabbdom). Based on many principles, snabbdom-pragma, aim to handle the same api as [React.createElement](https://facebook.github.io/react/docs/react-api.html#createelement) to take all benefits from the most used transpilers proven by the wider React community.
 
@@ -32,7 +44,7 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
 
 ## Getting started
 
-- **1.** To use snabbdom-pragma you need to download it thanks to your favorite JS package manager.
+- **1.** To use snabbdom-pragma you need to download it thanks to your favorite JavaScript Package Manager.
   ```sh
   yarn add snabbdom-pragma
   ```
@@ -41,19 +53,19 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
   npm install --save snabbdom-pragma
   ```
 
-- **2.** Then you can replace your transpiler pragma by `Snabbdom.createElement`.
+- **2.** The pragma option tells to your transpiler to use `Snabbdom.createElement` function instead of the default `React.createElement`.
   ```js
   buble.transform(input, {
     jsx: 'Snabbdom.createElement'
   })
   ```
 
-- **3.** Dont miss to import the `createElement` function into your code.
+- **3.** You will need to import the `Snabbdom.createElement` function into your code.
   ```js
   import Snabbdom from 'snabbdom-pragma'
   ```
 
-- **4.** Use JSX tags following standards JSX rules
+- **4.** Your JSX source code will now be transpiled to use Snabbdom.
   ```js
   const vnode = <div>Hello World</div>
 
@@ -63,7 +75,7 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
 ## Usage
 
 ### Bublé
-snabbdom-pragma works fine and is fully tested for [Bublé](https://buble.surge.sh/guide/)
+snabbdom-pragma works fine and is fully tested for [Bublé](https://buble.surge.sh/guide/).
 ```js
 buble.transform(input, {
   jsx: 'Snabbdom.createElement'
@@ -72,7 +84,7 @@ buble.transform(input, {
 
 ### Babel
 snabbdom-pragma works fine and is fully tested for [Babel](https://babeljs.io) with the
-[transform-react-jsx](https://babeljs.io/docs/plugins/transform-react-jsx/) plugin enabled
+[transform-react-jsx](https://babeljs.io/docs/plugins/transform-react-jsx/) plugin enabled.
 ```js
 babel.transform(input, {
   plugins: ['transform-react-jsx', {
@@ -82,7 +94,7 @@ babel.transform(input, {
 ```
 
 ### Traceur
-snabbdom-pragma works fine and is fully tested for [Traceur](https://github.com/google/traceur-compiler)
+snabbdom-pragma works fine and is fully tested for [Traceur](https://github.com/google/traceur-compiler).
 ```js
 traceur.compile(input, {
   jsx: 'Snabbdom.createElement'
@@ -90,8 +102,10 @@ traceur.compile(input, {
 ```
 
 ## JSX Features
+Thanks to your Transpiler, JSX tags will be transpiled into `NotReact.createElement` function following the `React.creatElement` specifications.
 
 ### Elements
+As `Snabbdom.createElement` is a straightforward mapping to `Snabbdom/h`, HTML elements will works out of the box.
 ```js
 /* Writen */
 const vnode = <div>Hello World</div>
@@ -104,6 +118,7 @@ const vnode = h('div', {}, 'Hello World')
 ```
 
 ### Attributes
+By default, attributes will be entrust to the `props` module (see [Modules Features](#modules-object))
 ```js
 /* Writen */
 const vnode = <input type="text"/>
@@ -116,6 +131,7 @@ const vnode = h('input', { props: { type: 'text' } }, [])
 ```
 
 ### SVG
+SVG tags works without any configuration, but attributes will only works with the `attrs` module
 ```js
 /* Writen */
 const vnode = <circle cx="43.5" cy="23" r="5"/>
@@ -128,8 +144,11 @@ const vnode = h('circle', { attrs: { cx: 43.5, cy: 23, r: 5 } }, [])
 ```
 
 ## Snabbdom Features
+In Snabbdom, functionalities is delegated to separates modules. Like `hook` (lifecycle), `on` (events), `style`, `props`, etc...
+Snabbdom-pragma give you two ways to use these modules.
 
 ### Modules object
+You can deal with modules properties with an object
 ```js
 /* Writen */
 const vnode = <div style="{ color: 'red', fontWeight: 'bold' }"></div>
@@ -142,6 +161,7 @@ const vnode = h('div', { style: { color: 'red', fontWeight: 'bold' } }, [])
 ```
 
 ### Modules attribute
+Or by using the `MODULE-PROPERTY` attribute
 ```js
 /* Writen */
 const vnode = <button on-click={ callback }/>
@@ -154,7 +174,10 @@ const vnode = h('button', { on: { click: callback } }, [])
 ```
 
 ## 'NotReact' Features
+In React you can create components and use them inside other components, using the `React.createClass` function.
+
 ### Components
+Snabbdom-pragma use simple functions as component of type `(attributes, children) => vnode`.
 ```js
 /* Writen */
 const Component = (name) =>
@@ -174,6 +197,7 @@ const Component = (name) =>
 
 const vnode = Component({ name: 'toto' }, [])
 ```
+As in React, components function need to start with a capital letter, while regular HTML tags start with lower case letters. This is the common way to tell to your transpiler to give the function to the `Snabbdom.createElement` instead of a string.
 
 ## Misc
 
