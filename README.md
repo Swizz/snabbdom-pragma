@@ -4,9 +4,11 @@
   Well tested <code>NotReact.createElement</code> pragma although for Snabbdom !
 </div>
 
+<br/>
+
 <div align="center">
   <a href="https://www.npmjs.com/package/snabbdom-pragma">
-    <img src="https://img.shields.io/npm/v/snabbdom-pragma.svg?style=flat-square" alt="npm version"/>
+    <img src="https://img.shields.io/npm/v/snabbdom-pragma.svg?label=release&style=flat-square" alt="npm version"/>
   </a>
   <a href="https://github.com/Swizz/snabbdom-pragma/blob/master/LICENSE.md">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="mit license"/>
@@ -66,7 +68,7 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
   ```
 
 - **4.** Your JSX source code will now be transpiled to use Snabbdom.
-  ```js
+  ```jsx
   const vnode = <div>Hello World</div>
 
   patch(document.body, vnode)
@@ -106,7 +108,7 @@ Thanks to your transpiler, JSX tags will be transpiled into `NotReact.createElem
 
 ### Elements
 As `Snabbdom.createElement` is a straightforward mapping to `Snabbdom/h`, HTML elements will work out of the box.
-```js
+```jsx
 /* written */
 const vnode = <div>Hello World</div>
 
@@ -119,7 +121,7 @@ const vnode = h('div', {}, 'Hello World')
 
 ### Attributes
 By default, attributes will be entrust to the `props` module. (see [Modules Features](#modules-object))
-```js
+```jsx
 /* written */
 const vnode = <input type="text"/>
 
@@ -132,7 +134,7 @@ const vnode = h('input', { props: { type: 'text' } }, [])
 
 ### SVG
 SVG tags work without any configuration, but attributes will only work with the `attrs` module.
-```js
+```jsx
 /* written */
 const vnode = <circle cx="43.5" cy="23" r="5"/>
 
@@ -149,7 +151,7 @@ Snabbdom-pragma give you two ways to use these modules.
 
 ### Modules object
 You can deal with modules properties with an object.
-```js
+```jsx
 /* written */
 const vnode = <div style={{ color: 'red', fontWeight: 'bold' }}></div>
 
@@ -162,7 +164,7 @@ const vnode = h('div', { style: { color: 'red', fontWeight: 'bold' } }, [])
 
 ### Modules attribute
 Or by using the `MODULE-PROPERTY` attribute.
-```js
+```jsx
 /* written */
 const vnode = <button on-click={ callback }/>
 
@@ -178,7 +180,7 @@ In React you can create components and use them inside other components, using t
 
 ### Components
 Snabbdom-pragma use simple functions as component of type `(attributes, children) => vnode`.
-```js
+```jsx
 /* written */
 const Component = (name) =>
   <div>Hello { name }</div>
@@ -195,7 +197,7 @@ const vnode = Snabbdom.createElement(Component, { name: 'world' })
 const Component = (name) =>
   h('div', {}, ['Hello ', name])
 
-const vnode = Component({ name: 'toto' }, [])
+const vnode = Component({ name: 'world' }, [])
 ```
 As in React, components function need to start with a capital letter, while regular HTML tags start with lower case letters. This is the common way to tell to your transpiler to give the function to the `Snabbdom.createElement` instead of a string.
 
