@@ -39,6 +39,7 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
   - [Snabbdom Features](#snabbdom-features)
     * [Modules object](#modules-object)
     * [Modules attribute](#modules-object)
+    * [Both](#both)
   - ['NotReact' Features](#notreact-features)
     * [Components](#components)
   - [Misc](#misc)
@@ -173,6 +174,18 @@ const vnode = Snabbdom.createElement('button', { 'on-click': callback })
 
 /* Once Executed */
 const vnode = h('button', { on: { click: callback } }, [])
+```
+
+### Both
+```jsx
+/* written */
+const vnode = <div style-color="red" style={{ background: 'blue' }}></div>
+
+/* Once Transpiled */
+const vnode = Snabbdom.createElement('div', { 'style-color': 'red', style: { background: 'blue' } })
+
+/* Once Executed */
+const vnode = h('div', { style: { color: 'red', background: 'blue' } }, [])
 ```
 
 ## 'NotReact' Features
