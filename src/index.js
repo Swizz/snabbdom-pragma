@@ -6,11 +6,40 @@ const svgTags = [
   'svg', 'circle', 'ellipse', 'line', 'polygon', 'polyline', 'rect', 'g', 'path', 'text'
 ]
 
+const considerDataAria = (props) => {
+
+  Object.keys(props).forEach((module) => {
+
+    if (['data', 'aria'].indexOf(module) > -1) {
+
+      Object.keys(props[module]).forEach((prop) => {
+
+        props.attrs = props.attrs || {}
+
+        props.attrs[`${module}-${prop}`] = props[module][prop]
+        delete props[module][prop]
+
+      })
+
+      if (Object.keys(props[module]).length === 0) {
+
+        delete props[module]
+
+      }
+
+    }
+
+  })
+
+  return props
+
+}
+
 const sanitizeProps = (props) => {
 
   props = props === null ? {} : props
 
-  Object.keys(props).map((prop) => {
+  Object.keys(props).forEach((prop) => {
 
     const keysRiver = prop.split('-').reverse()
 
@@ -23,18 +52,16 @@ const sanitizeProps = (props) => {
       extend(true, props, newObject)
       delete props[prop]
 
-    } else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key'].indexOf(prop) > -1)) {
+    } else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key', 'data', 'aria'].indexOf(prop) > -1)) {
 
       extend(true, props, { props: { [prop]: props[prop] } })
       delete props[prop]
 
     }
 
-    return { toto: true }
-
   })
 
-  return props
+  return considerDataAria(props)
 
 }
 
