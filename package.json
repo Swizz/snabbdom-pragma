@@ -29,10 +29,11 @@
     "snabbdom": "^0.6.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/xo && ./node_modules/.bin/ava",
+    "lint": "./node_modules/.bin/xo",
+    "test": "npm run lint && ./node_modules/.bin/ava",
     "transpile": "./node_modules/.bin/buble -i src/ -o dist/ --no modules",
     "modules": "./node_modules/.bin/rollup -i dist/index.js -o dist/index.js -f cjs",
-    "build": "npm run transpile ; npm run modules",
+    "build": "npm run transpile && npm run modules",
     "prepublish": "npm run build"
   },
   "ava": {
@@ -47,24 +48,16 @@
     "semicolon": false,
     "space": true,
     "rules": {
-      "padded-blocks": [
-        "error",
-        "always"
-      ],
-      "object-curly-spacing": [
-        "error",
-        "always"
-      ],
-      "arrow-parens": [
-        "error",
-        "always"
-      ],
+      "object-curly-spacing": ["error", "always"],
+      "arrow-parens": ["error", "always"],
+      "new-cap": ["error", {"capIsNew": false}],
+      "dot-location": ["error", "object"],
+      "no-negated-condition": "off",
       "import/no-named-as-default-member": "off",
       "import/prefer-default-export": "off",
       "import/no-dynamic-require": "off"
     },
     "ignores": [
-      "test/**/expected.js",
       "test/**/transform-*.js"
     ]
   },
