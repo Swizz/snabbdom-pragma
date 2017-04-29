@@ -31,9 +31,9 @@
   "scripts": {
     "lint": "./node_modules/.bin/xo",
     "test": "npm run lint && ./node_modules/.bin/ava",
-    "transpile": "./node_modules/.bin/buble -i src/ -o dist/ --no modules",
-    "modules": "./node_modules/.bin/rollup -i dist/index.js -o dist/index.js -f cjs",
-    "build": "npm run transpile && npm run modules",
+    "transpile": "./node_modules/.bin/buble -i dist/index.js -o dist/index.js --no modules",
+    "modules": "./node_modules/.bin/rollup -i src/index.js -o dist/index.js -f cjs",
+    "build": "npm run modules && npm run transpile",
     "prepublish": "npm run build"
   },
   "ava": {
