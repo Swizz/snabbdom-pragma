@@ -47,15 +47,9 @@
   "xo": {
     "semicolon": false,
     "space": true,
+    "extends": "xo-swizz",
     "rules": {
-      "object-curly-spacing": ["error", "always"],
-      "arrow-parens": ["error", "always"],
-      "new-cap": ["error", {"capIsNew": false}],
-      "dot-location": ["error", "object"],
-      "no-negated-condition": "off",
-      "import/no-named-as-default-member": "off",
-      "import/prefer-default-export": "off",
-      "import/no-dynamic-require": "off"
+    "import/no-dynamic-require": "off"
     },
     "ignores": [
       "test/**/transform-*.js"

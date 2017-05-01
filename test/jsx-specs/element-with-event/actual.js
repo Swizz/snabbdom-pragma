@@ -1,5 +1,5 @@
 
-// import Snabbdom from '../../../src/index'
+import Snabbdom from '../../../src/index'
 
 const callback = () => {}
 
