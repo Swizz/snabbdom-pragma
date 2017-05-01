@@ -76,6 +76,8 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
   ```
 
 ## Usage
+Snabbdom-pragma is compiler/transpiler independent ! At least your transpiler allow custom JSX pragma.
+(If you know a well used transpiler not in this list, feel free to open an issue)
 
 ### Bublé
 Snabbdom-pragma works fine and is fully tested for [Bublé](https://buble.surge.sh/guide/).
@@ -108,7 +110,7 @@ traceur.compile(input, {
 Thanks to your transpiler, JSX tags will be transpiled into `NotReact.createElement` function following the `React.creatElement` specifications.
 
 ### Elements
-As `Snabbdom.createElement` is a straightforward mapping to `Snabbdom/h`, HTML elements will work out of the box.
+As `Snabbdom.createElement` is like a straightforward mapping to `Snabbdom/h`, HTML elements will work out of the box.
 ```jsx
 /* written */
 const vnode = <div>Hello World</div>
@@ -116,7 +118,7 @@ const vnode = <div>Hello World</div>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('div', null, 'Hello World')
 
-/* Once Executed */
+/* Same as */
 const vnode = h('div', {}, 'Hello World')
 ```
 
@@ -129,7 +131,7 @@ const vnode = <input type="text"/>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('input', { type: 'text' })
 
-/* Once Executed */
+/* Same as */
 const vnode = h('input', { props: { type: 'text' } }, [])
 ```
 
@@ -142,7 +144,7 @@ const vnode = <circle cx="43.5" cy="23" r="5"/>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('circle', { cx: 43.5, cy: 23, r: 5 })
 
-/* Once Executed */
+/* Same as */
 const vnode = h('circle', { attrs: { cx: 43.5, cy: 23, r: 5 } }, [])
 ```
 
@@ -159,7 +161,7 @@ const vnode = <div style={{ color: 'red', fontWeight: 'bold' }}></div>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('div', { style: { color: 'red', fontWeight: 'bold' } })
 
-/* Once Executed */
+/* Same as */
 const vnode = h('div', { style: { color: 'red', fontWeight: 'bold' } }, [])
 ```
 
@@ -172,7 +174,7 @@ const vnode = <button on-click={ callback }/>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('button', { 'on-click': callback })
 
-/* Once Executed */
+/* Same as */
 const vnode = h('button', { on: { click: callback } }, [])
 ```
 
@@ -184,7 +186,7 @@ const vnode = <div style-color="red" style={{ background: 'blue' }}></div>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('div', { 'style-color': 'red', style: { background: 'blue' } })
 
-/* Once Executed */
+/* Same as */
 const vnode = h('div', { style: { color: 'red', background: 'blue' } }, [])
 ```
 
@@ -195,22 +197,38 @@ In React you can create components and use them inside other components, using t
 Snabbdom-pragma use simple functions as component of type `(attributes, children) => vnode`.
 ```jsx
 /* written */
-const Component = (name) =>
-  <div>Hello { name }</div>
+const Component = ({ name }, children) =>
+  <div>
+    Hello { name }
 
-const vnode = <Component name="world"/>
+    <div>
+      { children }
+    </div>
+  </div>
+
+const vnode = <Component name="world">
+    <p>It works !</p>
+  </Component>
 
 /* Once Transpiled */
-const Component = (name) =>
-  Snabbdom.createElement('div', null, 'Hello ', name)
+const Component = ({ name }, children) =>
+  Snabbdom.createElement('div', null, 'Hello ', name,
+    Snabbdom.createElement('div', null, children)
+  )
 
-const vnode = Snabbdom.createElement(Component, { name: 'world' })
+const vnode = Snabbdom.createElement(Component, { name: 'world' },
+  Snabbdom.createElement('p', null, 'It works !')
+)
 
-/* Once Executed */
-const Component = (name) =>
-  h('div', {}, ['Hello ', name])
+/* Same as */
+const Component = ({ name }, children) =>
+  h('div', {}, ['Hello ', name,
+    h('div', {}, children)
+  ])
 
-const vnode = Component({ name: 'world' }, [])
+const vnode = Component({ name: 'world' }, [
+  h('p', {}, 'It works !')
+])
 ```
 As in React, components function need to start with a capital letter, while regular HTML tags start with lower case letters. This is the common way to tell to your transpiler to give the function to the `Snabbdom.createElement` instead of a string.
 
