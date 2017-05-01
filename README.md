@@ -118,7 +118,7 @@ const vnode = <div>Hello World</div>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('div', null, 'Hello World')
 
-/* Same as */
+/* Similar to */
 const vnode = h('div', {}, 'Hello World')
 ```
 
@@ -131,7 +131,7 @@ const vnode = <input type="text"/>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('input', { type: 'text' })
 
-/* Same as */
+/* Similar to */
 const vnode = h('input', { props: { type: 'text' } }, [])
 ```
 
@@ -144,7 +144,7 @@ const vnode = <circle cx="43.5" cy="23" r="5"/>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('circle', { cx: 43.5, cy: 23, r: 5 })
 
-/* Same as */
+/* Similar to */
 const vnode = h('circle', { attrs: { cx: 43.5, cy: 23, r: 5 } }, [])
 ```
 
@@ -161,7 +161,7 @@ const vnode = <div style={{ color: 'red', fontWeight: 'bold' }}></div>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('div', { style: { color: 'red', fontWeight: 'bold' } })
 
-/* Same as */
+/* Similar to */
 const vnode = h('div', { style: { color: 'red', fontWeight: 'bold' } }, [])
 ```
 
@@ -174,7 +174,7 @@ const vnode = <button on-click={ callback }/>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('button', { 'on-click': callback })
 
-/* Same as */
+/* Similar to */
 const vnode = h('button', { on: { click: callback } }, [])
 ```
 
@@ -186,7 +186,7 @@ const vnode = <div style-color="red" style={{ background: 'blue' }}></div>
 /* Once Transpiled */
 const vnode = Snabbdom.createElement('div', { 'style-color': 'red', style: { background: 'blue' } })
 
-/* Same as */
+/* Similar to */
 const vnode = h('div', { style: { color: 'red', background: 'blue' } }, [])
 ```
 
@@ -220,7 +220,7 @@ const vnode = Snabbdom.createElement(Component, { name: 'world' },
   Snabbdom.createElement('p', null, 'It works !')
 )
 
-/* Same as */
+/* Similar to */
 const Component = ({ name }, children) =>
   h('div', {}, ['Hello ', name,
     h('div', {}, children)
