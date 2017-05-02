@@ -20,6 +20,7 @@
     "babel-core": "^6.24.0",
     "babel-plugin-transform-react-jsx": "^6.8.0",
     "buble": "^0.15.2",
+    "rimraf": "^2.6.1",
     "rollup": "^0.41.3",
     "traceur": "^0.0.111",
     "xo": "^0.17.1"
@@ -50,7 +51,7 @@
     "space": true,
     "extends": "xo-swizz",
     "rules": {
-    "import/no-dynamic-require": "off"
+      "import/no-dynamic-require": "off"
     },
     "ignores": [
       "test/**/transform-*.js"
