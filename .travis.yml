@@ -12,6 +12,10 @@ script:
   - yarn modules
   - yarn clean
 
+branches:
+  only:
+    - feature/travis-ci
+
 # deploy:
 #   - provider: npm
 #     email: 'xxxx'
