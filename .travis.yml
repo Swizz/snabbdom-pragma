@@ -1,0 +1,31 @@
+language: node_js
+node_js:
+  - '6'
+
+cache:
+  yarn: true
+
+script:
+  - yarn lint
+  - yarn test:prebublish
+  - yarn transpile
+  - yarn modules
+  - yarn clean
+
+deploy:
+  - provider: npm
+    email: 'xxxx'
+    api_key: 'xxxx'
+    skip_cleanup: true
+    on:
+      tags: true
+      branch: master
+
+  # - provider: script
+  #   script:
+  #     - git add 'dist/'
+  #     - git commit -m '[ci skip] Build '$TRAVIS_TAG
+  #   skip_cleanup: true
+  #   on:
+  #     tags: true
+  #     branch: master
