@@ -12,20 +12,20 @@ script:
   - yarn modules
   - yarn clean
 
-deploy:
-  - provider: npm
-    email: 'xxxx'
-    api_key: 'xxxx'
-    skip_cleanup: true
-    on:
-      tags: true
-      branch: master
-
-  # - provider: script
-  #   script:
-  #     - git add 'dist/'
-  #     - git commit -m '[ci skip] Build '$TRAVIS_TAG
-  #   skip_cleanup: true
-  #   on:
-  #     tags: true
-  #     branch: master
+# deploy:
+#   - provider: npm
+#     email: 'xxxx'
+#     api_key: 'xxxx'
+#     skip_cleanup: true
+#     on:
+#       tags: true
+#       branch: master
+#
+#  - provider: script
+#    script:
+#      - git add 'dist/'
+#      - git commit -m '[ci skip] Build '$TRAVIS_TAG
+#    skip_cleanup: true
+#    on:
+#      tags: true
+#      branch: master
