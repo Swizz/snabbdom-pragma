@@ -1,8 +1,6 @@
 
-import h from 'snabbdom/h'
-
 import { onInit } from './neutral'
 
-export default () => {
+export default (h) => {
   return h('div', { hook: { init: onInit } }, [])
 }

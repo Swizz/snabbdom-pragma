@@ -1,8 +1,6 @@
 
-import h from 'snabbdom/h'
-
 const name = 'world'
 
-export default () => {
+export default (h) => {
   return h('span', {}, ['Hello ', name])
 }

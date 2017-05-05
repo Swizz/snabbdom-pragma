@@ -1,8 +1,6 @@
 
-import h from 'snabbdom/h'
-
 import { clickHandler } from './neutral'
 
-export default () => {
+export default (h) => {
   return h('div', { on: { click: clickHandler } }, [])
 }

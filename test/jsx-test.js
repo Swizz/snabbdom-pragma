@@ -7,7 +7,7 @@ import test from 'ava'
 const fixturesDir = path.join(__dirname, 'jsx-specs')
 
 fs.readdirSync(fixturesDir).forEach((caseName) => {
-  test(`Should Bublé transform ${caseName.split('-').join(' ')}`, (t) => {
+  test(`trans - Should Bublé transform ${caseName.split('-').join(' ')}`, (t) => {
     const fixtureDir = path.join(fixturesDir, caseName)
 
     const actual = require('buble').transform(
@@ -30,7 +30,7 @@ fs.readdirSync(fixturesDir).forEach((caseName) => {
     t.is(actual.trim(), transform.trim())
   })
 
-  test(`Should Babel transform ${caseName.split('-').join(' ')}`, (t) => {
+  test(`trans - Should Babel transform ${caseName.split('-').join(' ')}`, (t) => {
     const fixtureDir = path.join(fixturesDir, caseName)
 
     const actual = require('babel-core').transform(
@@ -50,7 +50,7 @@ fs.readdirSync(fixturesDir).forEach((caseName) => {
     t.is(actual.trim(), transform.trim())
   })
 
-  test(`Should Traceur transform ${caseName.split('-').join(' ')}`, (t) => {
+  test(`trans - Should Traceur transform ${caseName.split('-').join(' ')}`, (t) => {
     const fixtureDir = path.join(fixturesDir, caseName)
 
     const actual = require('traceur').compile(
