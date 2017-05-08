@@ -1,16 +1,15 @@
 language: node_js
 node_js:
-  - '6'
+  - '6' # lts
 
 cache:
   yarn: true
 
 script:
-  - yarn lint
-  - yarn test:prebublish
-  - yarn transpile
-  - yarn modules
-  - yarn clean
+  - yarn run lint
+  - yarn run test:prebuild
+  - yarn run build
+  - yarn run test:postbuild
 
 branches:
   only:
