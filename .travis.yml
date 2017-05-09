@@ -5,10 +5,15 @@ node_js:
 cache:
   yarn: true
 
+matrix:
+  fast_finish: true
+
 script:
   - yarn run lint
   - yarn run test:prebuild
+  - HASH=$(cksum dist/index.js)
   - yarn run build
+  - if [[ "$(cksum dist/index.js)" != $HASH ]]; then exit 1; fi
   - yarn run test:postbuild
 
 branches:
@@ -21,14 +26,15 @@ branches:
 #     api_key: 'xxxx'
 #     skip_cleanup: true
 #     on:
-#       tags: true
+#       repo: Swizz/snabbdom-pragma
 #       branch: master
+#       tags: true
 #
-#  - provider: script
-#    script:
-#      - git add 'dist/'
-#      - git commit -m '[ci skip] Build '$TRAVIS_TAG
-#    skip_cleanup: true
-#    on:
-#      tags: true
-#      branch: master
+#   - provider: releases
+#     user: 'xxxx'
+#     password: 'xxxx'
+#     skip_cleanup: true
+#     on:
+#       repo: Swizz/snabbdom-pragma
+#       branch: master
+#       tags: true
