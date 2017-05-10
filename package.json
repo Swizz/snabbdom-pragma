@@ -1,6 +1,6 @@
 {
   "name": "snabbdom-pragma",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "'NotReact.createElement' pragma although for snabbdom",
   "keywords": [
     "snabbdom",
@@ -28,6 +28,7 @@
     "rollup": "^0.41.3",
     "snabbdom": "^0.6.7",
     "traceur": "^0.0.111",
+    "typescript": "^2.3.2",
     "xo": "^0.18.2"
   },
   "dependencies": {

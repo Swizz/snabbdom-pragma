@@ -33,6 +33,7 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
   - [Getting started](#getting-started)
   - [Usage](#usage)
     * [Bublé](#bublé)
+    * [Typescript](#typescript)
     * [Babel](#babel)
     * [Traceur](#traceur)
   - [JSX Features](#jsx-features)
@@ -87,6 +88,17 @@ Snabbdom-pragma works fine and is fully tested for [Bublé](https://buble.surge.
 ```js
 buble.transform(input, {
   jsx: 'Snabbdom.createElement'
+})
+```
+
+### Typescript
+Snabbdom-pragma works fine and is fully tested for [Typescript](https://www.typescriptlang.org).
+```js
+typescript.transpileModule(input, {
+  compilerOptions: {
+    jsx: 'react',
+    jsxFactory: 'Snabbdom.createElement'
+  }
 })
 ```
 
