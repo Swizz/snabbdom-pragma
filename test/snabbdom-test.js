@@ -1,3 +1,4 @@
+
 import path from 'path'
 import fs from 'fs'
 
@@ -6,9 +7,7 @@ import test from 'ava'
 const fixturesDir = path.join(__dirname, 'snabbdom-specs')
 
 fs.readdirSync(fixturesDir).forEach((caseName) => {
-
   test(`Should works for ${caseName.split('-').join(' ')}`, (t) => {
-
     const fixtureDir = path.join(fixturesDir, caseName)
 
     const actual = require(
@@ -20,7 +19,5 @@ fs.readdirSync(fixturesDir).forEach((caseName) => {
     ).default()
 
     t.deepEqual(actual, expected)
-
   })
-
 })

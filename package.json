@@ -20,6 +20,7 @@
     "babel-core": "^6.24.0",
     "babel-plugin-transform-react-jsx": "^6.8.0",
     "buble": "^0.15.2",
+    "rimraf": "^2.6.1",
     "rollup": "^0.41.3",
     "traceur": "^0.0.111",
     "xo": "^0.17.1"
@@ -29,10 +30,12 @@
     "snabbdom": "^0.6.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/xo && ./node_modules/.bin/ava",
-    "transpile": "./node_modules/.bin/buble -i src/ -o dist/ --no modules",
+    "lint": "./node_modules/.bin/xo",
+    "test": "npm run lint && ./node_modules/.bin/ava",
+    "transpile": "./node_modules/.bin/buble -i src/ -o dist/ --no modules --objectAssign fn.assign",
     "modules": "./node_modules/.bin/rollup -i dist/index.js -o dist/index.js -f cjs",
-    "build": "npm run transpile ; npm run modules",
+    "clean": "./node_modules/.bin/rimraf 'dist/!(index.js)'",
+    "build": "npm run test ; npm run transpile && npm run modules && npm run clean",
     "prepublish": "npm run build"
   },
   "ava": {
@@ -46,25 +49,11 @@
   "xo": {
     "semicolon": false,
     "space": true,
+    "extends": "xo-swizz",
     "rules": {
-      "padded-blocks": [
-        "error",
-        "always"
-      ],
-      "object-curly-spacing": [
-        "error",
-        "always"
-      ],
-      "arrow-parens": [
-        "error",
-        "always"
-      ],
-      "import/no-named-as-default-member": "off",
-      "import/prefer-default-export": "off",
       "import/no-dynamic-require": "off"
     },
     "ignores": [
-      "test/**/expected.js",
       "test/**/transform-*.js"
     ]
   },
