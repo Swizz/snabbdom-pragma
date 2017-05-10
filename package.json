@@ -1,6 +1,6 @@
 {
   "name": "snabbdom-pragma",
-  "version": "1.10.0",
+  "version": "2.0.0",
   "description": "'NotReact.createElement' pragma although for snabbdom",
   "keywords": [
     "snabbdom",
@@ -9,7 +9,8 @@
     "createElement",
     "Bublé",
     "Buble",
-    "Babel"
+    "Babel",
+    "Traceur"
   ],
   "author": "Swizz <gerodel.quentin@gmail.com>",
   "license": "MIT",
