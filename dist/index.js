@@ -45,13 +45,19 @@ var assign = function () {
   return _extend.apply(void 0, [ false ].concat( objs ));
 };
 
+var entries = function (obj) { return Object.keys(obj).map(
+  function (key) { return [key, obj[key]]; }
+); };
+
+
+
 var flatten = function (arr) { return arr.reduce(
   function (acc, curr) { return !array(curr) ? acc.concat( [curr]) :
     acc.concat( flatten(curr)); },
   []
 ); };
 
-var mapObject = function (obj, fn) { return Object.entries(obj).map(
+var mapObject = function (obj, fn) { return entries(obj).map(
   function (ref) {
     var key = ref[0];
     var val = ref[1];
@@ -105,7 +111,7 @@ var omit = function (key, obj) { return mapObject(obj,
   }
 ); };
 
-// const fnName = (...params) => guard ? default : ...
+// Const fnName = (...params) => guard ? default : ...
 
 var createTextElement = function (text$$1) { return !text(text$$1) ? undefined : {
   text: text$$1,

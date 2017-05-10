@@ -39,7 +39,8 @@
     "transpile": "./node_modules/.bin/buble -i src/ -o dist/ --no modules --objectAssign fn.assign",
     "modules": "./node_modules/.bin/rollup -i dist/index.js -o dist/index.js -f cjs",
     "clean": "./node_modules/.bin/rimraf 'dist/!(index.js)'",
-    "build": "npm run transpile && npm run modules && npm run clean"
+    "build": "npm run transpile && npm run modules && npm run clean",
+    "make": "npm run lint && npm run test:prebuild && npm run build && npm run test:postbuild"
   },
   "ava": {
     "files": [
