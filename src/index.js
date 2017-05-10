@@ -2,7 +2,7 @@
 import * as is from './is'
 import * as fn from './fn'
 
-// const fnName = (...params) => guard ? default : ...
+// Const fnName = (...params) => guard ? default : ...
 
 const createTextElement = (text) => !is.text(text) ? undefined : {
   text,

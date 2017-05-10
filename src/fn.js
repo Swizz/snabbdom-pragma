@@ -7,13 +7,21 @@ export const extend = (...objs) => _extend(true, ...objs)
 
 export const assign = (...objs) => _extend(false, ...objs)
 
+export const entries = (obj) => Object.keys(obj).map(
+  (key) => [key, obj[key]]
+)
+
+export const values = (obj) => Object.keys(obj).map(
+  (key) => obj[key]
+)
+
 export const flatten = (arr) => arr.reduce(
   (acc, curr) => !is.array(curr) ? [...acc, curr] :
     [...acc, ...flatten(curr)],
   []
 )
 
-export const mapObject = (obj, fn) => Object.entries(obj).map(
+export const mapObject = (obj, fn) => entries(obj).map(
   ([key, val]) => fn([key, val])
 ).reduce(
   (acc, curr) => extend(acc, curr),
