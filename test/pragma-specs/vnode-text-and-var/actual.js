@@ -1,8 +1,6 @@
 
-import Snabbdom from '../../../src/index'
-
 const name = 'world'
 
-export default () => {
-  return Snabbdom.createElement('span', null, 'Hello ', name)
+export default (createElement) => {
+  return createElement('span', null, 'Hello ', name)
 }

@@ -1,7 +1,5 @@
 
-import h from 'snabbdom/h'
-
-export default () => {
+export default (h) => {
   const Component = ({ name }, children) =>
     h('div', {}, ['Hello ', name,
       h('div', {}, children)

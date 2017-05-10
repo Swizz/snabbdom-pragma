@@ -1,7 +1,5 @@
 
-import { createElement } from '../../../src/index'
-
-export default () => {
+export default (createElement) => {
   const Component = ({ name }) =>
     createElement('div', null, 'Hello ', name)
 

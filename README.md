@@ -13,6 +13,9 @@
   <a href="https://github.com/Swizz/snabbdom-pragma/blob/master/LICENSE.md">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="mit license"/>
   </a>
+  <a href="https://travis-ci.org/Swizz/snabbdom-pragm">
+    <img src="https://img.shields.io/travis/Swizz/snabbdom-pragma/master.svg?style=flat-square" alt="travis build"/>
+  </a>
 </div>
 
 <br/>
