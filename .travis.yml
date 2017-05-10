@@ -16,10 +16,6 @@ script:
   - bash -c 'if [[ "$(cksum dist/index.js)" != $HASH ]]; then exit 1; fi'
   - yarn run test:postbuild
 
-branches:
-  only:
-  - feature/travis-ci
-
 deploy:
   provider: npm
   email:
