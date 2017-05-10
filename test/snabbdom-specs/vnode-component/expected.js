@@ -1,13 +1,9 @@
 
-import h from 'snabbdom/h'
-
-export default () => {
-
+export default (h) => {
   const Component = ({ name }) =>
-    h('div', {}, ["Hello ", name])
+    h('div', {}, ['Hello ', name])
 
-  return Component({ name: "toto" }, [
-    h('span', {}, "Done")
+  return Component({ name: 'toto' }, [
+    h('span', {}, 'Done')
   ])
-
 }

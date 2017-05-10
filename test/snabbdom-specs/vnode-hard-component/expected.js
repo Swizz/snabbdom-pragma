@@ -1,8 +1,4 @@
 
-import h from 'snabbdom/h'
-
-export default () => {
-
-  return h('div', {}, ["Hello ", "world"])
-
+export default (h) => {
+  return h('div', {}, ['Hello ', 'world'])
 }

@@ -1,117 +1,58 @@
 
-import h from 'snabbdom/h'
-import extend from 'extend'
+import * as is from './is'
+import * as fn from './fn'
 
-const svgTags = [
-  'svg', 'circle', 'ellipse', 'line', 'polygon', 'polyline', 'rect', 'g', 'path', 'text'
-]
+// Const fnName = (...params) => guard ? default : ...
 
-const considerDataAria = (props) => {
+const createTextElement = (text) => !is.text(text) ? undefined : {
+  text,
+  sel: undefined,
+  data: undefined,
+  children: undefined,
+  elm: undefined,
+  key: undefined
+}
 
-  Object.keys(props).forEach((module) => {
-
-    if (['data', 'aria'].indexOf(module) > -1) {
-
-      Object.keys(props[module]).forEach((prop) => {
-
-        props.attrs = props.attrs || {}
-
-        props.attrs[`${module}-${prop}`] = props[module][prop]
-        delete props[module][prop]
-
-      })
-
-      if (Object.keys(props[module]).length === 0) {
-
-        delete props[module]
-
-      }
-
+const considerSvg = (vnode) => !is.svg(vnode) ? vnode :
+  fn.assign(vnode,
+    { data: fn.omit('props', fn.extend(vnode.data,
+      { ns: 'http://www.w3.org/2000/svg', attrs: vnode.data.props }
+    )) },
+    { children: is.undefinedv(vnode.children) ? undefined :
+      vnode.children.map((child) => considerSvg(child))
     }
+  )
 
-  })
+const considerDataAria = (data) => fn.mapObject(data,
+  ([mod, data]) => !['data', 'aria'].includes(mod) ? { [mod]: data } :
+    fn.flatifyKeys({ [mod]: data })
+)
 
-  return props
+const considerProps = (data) => fn.mapObject(data,
+  ([key, val]) => is.object(val) ? { [key]: val } :
+    { props: { [key]: val } }
+)
 
-}
+const sanitizeData = (data) => !is.object(data) ? {} :
+  considerProps(considerDataAria(fn.deepifyKeys(data)))
 
-const sanitizeProps = (props) => {
+const sanitizeText = (children) => !is.array(children) || children.length > 1 || !is.text(children[0]) ? undefined :
+  children[0]
 
-  props = props === null ? {} : props
+const sanitizeChildren = (children) => !is.array(children) || is.text(sanitizeText(children)) ? undefined :
+  fn.flatten(children).map(
+    (child) => is.vnode(child) ? child :
+      createTextElement(child)
+  )
 
-  Object.keys(props).forEach((prop) => {
-
-    const keysRiver = prop.split('-').reverse()
-
-    if (keysRiver.length > 1) {
-
-      let newObject = keysRiver.reduce(
-        (object, key) => ({ [key]: object }),
-        props[prop]
-      )
-      extend(true, props, newObject)
-      delete props[prop]
-
-    } else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key', 'data', 'aria'].indexOf(prop) > -1)) {
-
-      extend(true, props, { props: { [prop]: props[prop] } })
-      delete props[prop]
-
-    }
-
-  })
-
-  return considerDataAria(props)
-
-}
-
-const sanitizeChilds = (children) => {
-
-  if (children.length === 1 && typeof children[0] === 'string') {
-
-    return children[0]
-
-  }
-  if (children.reduce((acc, curr) => acc || Array.isArray(curr), false)) {
-
-    return children
-      .reduce((acc, curr) => Array.isArray(curr) ? [...acc, ...curr] : [...acc, curr], [])
-
-  }
-
-  return children
-
-}
-
-const considerSVG = (props, type) => {
-
-  if (svgTags.indexOf(type) > -1) {
-
-    const attrs = Object.assign({}, props.props, props.props.className ? { class: props.props.className } : undefined)
-
-    let p = Object.assign({}, props, { attrs: attrs })
-
-    if (p.attrs.className) {
-
-      delete p.attrs.className
-
-    }
-
-    delete p.props
-    return p
-
-  }
-  return props
-
-}
-
-export const createElement = (type, props, ...children) => {
-
-  return (typeof type === 'function') ?
-    type(props, children) :
-    h(type, considerSVG(sanitizeProps(props), type), sanitizeChilds(children))
-
-}
+export const createElement = (sel, data = {}, ...children) => is.fun(sel) ? sel(data, children) : considerSvg({
+  sel,
+  data: sanitizeData(data),
+  children: sanitizeChildren(children),
+  text: sanitizeText(children),
+  elm: undefined,
+  key: undefined
+})
 
 export default {
   createElement

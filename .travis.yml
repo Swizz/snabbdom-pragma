@@ -1,0 +1,28 @@
+language: node_js
+node_js:
+  - '6'
+
+cache:
+  yarn: true
+
+matrix:
+  fast_finish: true
+
+script:
+  - yarn run lint
+  - yarn run test:prebuild
+  - export HASH=$(cksum dist/index.js)
+  - yarn run build
+  - bash -c 'if [[ "$(cksum dist/index.js)" != $HASH ]]; then exit 1; fi'
+  - yarn run test:postbuild
+
+deploy:
+  provider: npm
+  email:
+    secure: pOrobfDewXKlKVzdXJeuhfvuj5QRjnLBUHQHqoZNxu4dpm66PpSG7NiGX0gtMkJh/uCbN132bjx0gpCBd02fNYoc7w4ZuwHerlGVRUniWUWeWBxdTABy6loov5IkdTdsieFw1VYwczPDW4Q6pVC6qjoN/s9+A7ZVt6GwfFajMTXHNcJ5CgYX2FcyuJUNXJ+LCRqG0y0SVX4qnxgtNajVrlUPdUngRTDE3vqoVM2y5AAB2MHTJ1WtxRCRMcXbQy2wVDPs90cLbm79aH95bTnuvLM3DbPeXonh/RWXBkmByNSuxwVQdLy0SXJH2ft+nzQ1HwIoVwRsqZxc/sz98GnTQRM1d3jNxbSzDn7wdTpkhnrNu2iJ3V0h0WrYhyDQk5S81DymESVeJ95Pyg5iU+BzAke+LzKjOVAeEcUo3kbFmDhrmRshETbBxNC5fOFQcx93A37y3wZZgkB8GRvT5yDQis0gEe3zWH2VZyzWHnbQmvlW+sQVFoLsr6mdlRbTjRsaaqS00+2qNiywFgOzrXeLRByC1aLAYQMlvdihGQoEdTN1nzi+woYGrBrqod+NsB9JS8QP2KGgjpQWWp3naa+APv9NP/Y9eRKHT0m3xI6diNggsSsP09N1rX27ivMvbJR6mIFflNu2XK6FesHBwqufyYVcsA1UJTuO7LXHHjh6AAY=
+  api_key:
+    secure: uyCJ4nUDE35SDEK5GkJ41i8LFQ+8mX4xv6bVq7YZ0k7OA10a/xUrvZ+pFsftC3WHArE6I/s9e1hsKk5x16yV6K0+wXlgqVOkX/H+trkByBAAgXxrWPtwOUJYhxFC4vY4YJjRNNX7u6uCvtdilsQ+tto3qxly6TdYx825J+8ORyG3rSxSgDSwEgzcPjEGRhqAPA4kPs3ZOvBAHtexgeJfpmvacbrI6ROyLUb0NKOpOcJ4sZVM71aDWGTXB44GbLgXAGJZke1/kSeEaxGuNqGB/HPwsFRsCUwxkGkvr2bTRWlWKZP578lhyXBcfobAnAveQAvOAgJPrZQFAcJuGW+Y5TkcT2srHJHazjBcBKYRt6/WqTTE1yWIDQohaiIq1IdmglVKzca56GcsJjpqVpNYvrNzADJxPmp3mFjB5KDJUhGWnNny7XGWCkPaBDhdcdR88jI2aaufyxr385E49zSCSk5T2MSJ8XURGnzjGdOtMwxh+9waaqBzjObSNOfKZIIpfvS9mCV05VUXNmpyRk/pZmd1u0LLXV0hwuGM57DmSEjrPHzjxgB32jZj1FU1gKzxm+miRFZjxNe8MDpnlIvzaZIcIgZn4A5JcHLU23i/OsjadmWtS2c7+V9onv27XXXyzbTrZxVErFyd8/qjcs1jZQMlIFmS9FwyL5b2A+H+ImI=
+  on:
+    repo: Swizz/snabbdom-pragma
+    branch: master
+    tags: true

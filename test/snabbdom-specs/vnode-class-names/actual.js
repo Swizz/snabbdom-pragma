@@ -1,10 +1,6 @@
 
-import { createElement } from '../../../src/index'
-
 import { isVisible, isEnabled } from './neutral'
 
-export default () => {
-
+export default (createElement) => {
   return createElement('div', { 'class-visible': isVisible, 'class-enabled': isEnabled })
-
 }

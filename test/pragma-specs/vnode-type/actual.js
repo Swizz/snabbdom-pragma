@@ -1,8 +1,4 @@
 
-import Snabbdom from '../../../src/index'
-
-export default () => {
-
-  return Snabbdom.createElement('div', null)
-
+export default (createElement) => {
+  return createElement('div', null)
 }

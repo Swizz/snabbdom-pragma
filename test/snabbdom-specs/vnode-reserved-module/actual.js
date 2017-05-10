@@ -1,8 +1,4 @@
 
-import { createElement } from '../../../src/index'
-
-export default () => {
-
+export default (createElement) => {
   return createElement('div', { style: ({ color: 'red', fontWeight: 'bold' }) })
-
 }

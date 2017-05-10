@@ -4,123 +4,183 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var h = _interopDefault(require('snabbdom/h'));
-var extend = _interopDefault(require('extend'));
+var _extend = _interopDefault(require('extend'));
 
-var svgTags = [
-  'svg', 'circle', 'ellipse', 'line', 'polygon', 'polyline', 'rect', 'g', 'path', 'text'
-];
+var undefinedv = function (v) { return v === undefined; };
 
-var considerDataAria = function (props) {
+var number = function (v) { return typeof v === 'number'; };
 
-  Object.keys(props).forEach(function (module) {
+var string = function (v) { return typeof v === 'string'; };
 
-    if (['data', 'aria'].indexOf(module) > -1) {
+var text = function (v) { return string(v) || number(v); };
 
-      Object.keys(props[module]).forEach(function (prop) {
+var array = function (v) { return Array.isArray(v); };
 
-        props.attrs = props.attrs || {};
+var object = function (v) { return v === Object(v); };
 
-        props.attrs[(module + "-" + prop)] = props[module][prop];
-        delete props[module][prop];
+var fun = function (v) { return typeof v === 'function'; };
 
-      });
+var vnode = function (v) { return object(v) &&
+  ['sel', 'data', 'children', 'text', 'elm', 'key'].every(
+    function (k) { return k in v; }
+  ); };
 
-      if (Object.keys(props[module]).length === 0) {
+var svg = function (v) { return [
+  'svg', 'circle', 'ellipse', 'line', 'polygon',
+  'polyline', 'rect', 'g', 'path', 'text'
+].includes(v.sel); };
 
-        delete props[module];
+// TODO: stop using extend here
+var extend = function () {
+  var objs = [], len = arguments.length;
+  while ( len-- ) objs[ len ] = arguments[ len ];
 
-      }
-
-    }
-
-  });
-
-  return props
-
+  return _extend.apply(void 0, [ true ].concat( objs ));
 };
 
-var sanitizeProps = function (props) {
+var assign = function () {
+  var objs = [], len = arguments.length;
+  while ( len-- ) objs[ len ] = arguments[ len ];
 
-  props = props === null ? {} : props;
+  return _extend.apply(void 0, [ false ].concat( objs ));
+};
 
-  Object.keys(props).forEach(function (prop) {
+var entries = function (obj) { return Object.keys(obj).map(
+  function (key) { return [key, obj[key]]; }
+); };
 
-    var keysRiver = prop.split('-').reverse();
 
-    if (keysRiver.length > 1) {
 
-      var newObject = keysRiver.reduce(
-        function (object, key) { return (( obj = {}, obj[key] = object, obj ))
-          var obj; },
-        props[prop]
-      );
-      extend(true, props, newObject);
-      delete props[prop];
+var flatten = function (arr) { return arr.reduce(
+  function (acc, curr) { return !array(curr) ? acc.concat( [curr]) :
+    acc.concat( flatten(curr)); },
+  []
+); };
 
-    } else if (!(['class', 'props', 'attrs', 'style', 'on', 'hook', 'key', 'data', 'aria'].indexOf(prop) > -1)) {
+var mapObject = function (obj, fn) { return entries(obj).map(
+  function (ref) {
+    var key = ref[0];
+    var val = ref[1];
 
-      extend(true, props, { props: ( obj = {}, obj[prop] = props[prop], obj ) });
+    return fn([key, val]);
+  }
+).reduce(
+  function (acc, curr) { return extend(acc, curr); },
+  {}
+); };
+
+var deepifyKeys = function (obj) { return mapObject(obj,
+  function (ref) {
+    var key = ref[0];
+    var val = ref[1];
+
+    return key.split('-').reverse().reduce(
+    function (object$$1, key) { return (( obj = {}, obj[key] = object$$1, obj ))
+      var obj; },
+    val
+  );
+  }
+); };
+
+var flatifyKeys = function (obj) { return mapObject(obj,
+  function (ref) {
+    var mod = ref[0];
+    var data = ref[1];
+
+    return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
+    flatifyKeys(data),
+    function (ref) {
+      var key = ref[0];
+      var val = ref[1];
+
+      return (( obj = {}, obj[(mod + "-" + key)] = val, obj ))
       var obj;
-      delete props[prop];
-
     }
-
-  });
-
-  return considerDataAria(props)
-
-};
-
-var sanitizeChilds = function (children) {
-
-  if (children.length === 1 && typeof children[0] === 'string') {
-
-    return children[0]
-
+  )
+    var obj;
   }
-  if (children.reduce(function (acc, curr) { return acc || Array.isArray(curr); }, false)) {
+); };
 
-    return children
-      .reduce(function (acc, curr) { return Array.isArray(curr) ? acc.concat( curr) : acc.concat( [curr]); }, [])
+var omit = function (key, obj) { return mapObject(obj,
+  function (ref) {
+    var mod = ref[0];
+    var data = ref[1];
 
+    return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {}
+    var obj;
   }
+); };
 
-  return children
+// Const fnName = (...params) => guard ? default : ...
 
-};
+var createTextElement = function (text$$1) { return !text(text$$1) ? undefined : {
+  text: text$$1,
+  sel: undefined,
+  data: undefined,
+  children: undefined,
+  elm: undefined,
+  key: undefined
+}; };
 
-var considerSVG = function (props, type) {
-
-  if (svgTags.indexOf(type) > -1) {
-
-    var attrs = Object.assign({}, props.props, props.props.className ? { class: props.props.className } : undefined);
-
-    var p = Object.assign({}, props, { attrs: attrs });
-
-    if (p.attrs.className) {
-
-      delete p.attrs.className;
-
+var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
+  assign(vnode$$1,
+    { data: omit('props', extend(vnode$$1.data,
+      { ns: 'http://www.w3.org/2000/svg', attrs: vnode$$1.data.props }
+    )) },
+    { children: undefinedv(vnode$$1.children) ? undefined :
+      vnode$$1.children.map(function (child) { return considerSvg(child); })
     }
+  ); };
 
-    delete p.props;
-    return p
+var considerDataAria = function (data) { return mapObject(data,
+  function (ref) {
+    var mod = ref[0];
+    var data = ref[1];
 
+    return !['data', 'aria'].includes(mod) ? ( obj = {}, obj[mod] = data, obj ) :
+    flatifyKeys(( obj$1 = {}, obj$1[mod] = data, obj$1 ))
+    var obj;
+    var obj$1;
   }
-  return props
+); };
 
-};
+var considerProps = function (data) { return mapObject(data,
+  function (ref) {
+    var key = ref[0];
+    var val = ref[1];
 
-var createElement = function (type, props) {
+    return object(val) ? ( obj = {}, obj[key] = val, obj ) :
+    { props: ( obj$1 = {}, obj$1[key] = val, obj$1 ) }
+    var obj;
+    var obj$1;
+  }
+); };
+
+var sanitizeData = function (data) { return !object(data) ? {} :
+  considerProps(considerDataAria(deepifyKeys(data))); };
+
+var sanitizeText = function (children) { return !array(children) || children.length > 1 || !text(children[0]) ? undefined :
+  children[0]; };
+
+var sanitizeChildren = function (children) { return !array(children) || text(sanitizeText(children)) ? undefined :
+  flatten(children).map(
+    function (child) { return vnode(child) ? child :
+      createTextElement(child); }
+  ); };
+
+var createElement = function (sel, data) {
   var children = [], len = arguments.length - 2;
   while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
 
-
-  return (typeof type === 'function') ?
-    type(props, children) :
-    h(type, considerSVG(sanitizeProps(props), type), sanitizeChilds(children))
-
+  if ( data === void 0 ) data = {};
+  return fun(sel) ? sel(data, children) : considerSvg({
+  sel: sel,
+  data: sanitizeData(data),
+  children: sanitizeChildren(children),
+  text: sanitizeText(children),
+  elm: undefined,
+  key: undefined
+});
 };
 
 var index = {
