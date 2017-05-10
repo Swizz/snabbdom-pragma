@@ -69,4 +69,26 @@ fs.readdirSync(fixturesDir).forEach((caseName) => {
 
     t.is(actual.trim(), transform.trim())
   })
+
+  test(`trans - Should Typescript transform ${caseName.split('-').join(' ')}`, (t) => {
+    const fixtureDir = path.join(fixturesDir, caseName)
+
+    const actual = require('typescript').transpileModule(
+      fs.readFileSync(
+        path.join(fixtureDir, 'actual.js')
+      ).toString(), {
+        compilerOptions: {
+          jsx: 'react',
+          jsxFactory: 'Snabbdom.createElement',
+          target: 'es6'
+        }
+      }
+    ).outputText
+
+    const transform = fs.readFileSync(
+      path.join(fixtureDir, 'transform-typescript.js')
+    ).toString()
+
+    t.is(actual.trim(), transform.trim())
+  })
 })
