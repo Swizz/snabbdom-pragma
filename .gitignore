@@ -1,2 +1,7 @@
 node_modules/
+
+// Local sandbox purpose
 demo.js
+demo.ts
+demo.tsx
+tsconfig.json
