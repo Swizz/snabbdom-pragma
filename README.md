@@ -92,7 +92,7 @@ buble.transform(input, {
 ```
 
 ### Typescript
-Snabbdom-pragma works fine and is fully tested for [Typescript](https://www.typescriptlang.org).
+Snabbdom-pragma works fine and is fully tested and typed for [Typescript](https://www.typescriptlang.org).
 ```js
 typescript.transpileModule(input, {
   compilerOptions: {

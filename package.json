@@ -16,6 +16,7 @@
   "license": "MIT",
   "repository": "git@github.com:Swizz/snabbdom-pragma.git",
   "main": "dist/index.js",
+  "types": "snabbdom-pragma.d.ts",
   "devDependencies": {
     "ava": "^0.19.1",
     "babel-core": "^6.24.0",
