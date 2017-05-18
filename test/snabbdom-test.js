@@ -5,8 +5,8 @@ import fs from 'fs'
 import test from 'ava'
 
 import h from 'snabbdom/h'
-import { createElement as src } from '../src/index'
-import { createElement as dist } from '../dist/index'
+import { createElement as src } from '../src/snabbdom-pragma'
+import { createElement as dist } from '../dist/snabbdom-pragma.common'
 
 const fixturesDir = path.join(__dirname, 'snabbdom-specs')
 

@@ -1,5 +1,5 @@
 
-import Snabbdom from '../../../src/index';
+import Snabbdom from '../../../src/snabbdom-pragma';
 export default () => {
     const Component = ({ name }) => Snabbdom.createElement("div", null,
         "Hello ",

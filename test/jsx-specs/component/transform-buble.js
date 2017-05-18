@@ -1,5 +1,5 @@
 
-import Snabbdom from '../../../src/index'
+import Snabbdom from '../../../src/snabbdom-pragma'
 
 export default () => {
   var Component = ({ name }) => // eslint-disable-line no-unused-vars
