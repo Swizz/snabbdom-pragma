@@ -83,7 +83,7 @@ var deepifyKeys = function (obj) { return mapObject(obj,
 ); };
 
 var renameMod = function (name) {
-  switch(name) {
+  switch (name) {
     case 'data': return 'dataset'
     default: return name
   }
