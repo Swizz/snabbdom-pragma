@@ -82,6 +82,13 @@ var deepifyKeys = function (obj) { return mapObject(obj,
   }
 ); };
 
+var renameMod = function (name) {
+  switch (name) {
+    case 'data': return 'dataset'
+    default: return name
+  }
+};
+
 var flatifyKeys = function (obj) { return mapObject(obj,
   function (ref) {
     var mod = ref[0];
@@ -132,7 +139,15 @@ var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
     }
   ); };
 
-var considerDataAria = function (data) { return mapObject(data,
+var considerDataAria = function (data) { return mapObject(
+  mapObject(data, function (ref) {
+    var mod = ref[0];
+    var data = ref[1];
+
+    var key = renameMod(mod);
+    return (( obj = {}, obj[key] = data, obj ))
+    var obj;
+  }),
   function (ref) {
     var mod = ref[0];
     var data = ref[1];
