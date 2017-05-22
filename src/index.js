@@ -49,14 +49,19 @@ const sanitizeChildren = (children) => !is.array(children) || is.text(sanitizeTe
       createTextElement(child)
   )
 
-export const createElement = (sel, data = {}, ...children) => is.fun(sel) ? sel(data, children) : considerSvg({
-  sel,
-  data: sanitizeData(data),
-  children: sanitizeChildren(children),
-  text: sanitizeText(children),
-  elm: undefined,
-  key: undefined
-})
+const vnodeAsComponent = (vnode, data) =>
+  fn.extend(vnode, data)
+
+export const createElement = (sel, data = {}, ...children) =>
+  is.fun(sel) ? sel(data, children) :
+  is.vnode(sel) ? vnodeAsComponent(sel, data) : considerSvg({
+    sel,
+    data: sanitizeData(data),
+    children: sanitizeChildren(children),
+    text: sanitizeText(children),
+    elm: undefined,
+    key: undefined
+  })
 
 export default {
   createElement
