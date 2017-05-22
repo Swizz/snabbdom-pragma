@@ -23,7 +23,11 @@ const considerSvg = (vnode) => !is.svg(vnode) ? vnode :
     }
   )
 
-const considerDataAria = (data) => fn.mapObject(data,
+const considerDataAria = (data) => fn.mapObject(
+  fn.mapObject(data, ([mod, data]) => {
+    const key = fn.renameMod(mod)
+    return ({ [key]: data })
+  }),
   ([mod, data]) => !['data', 'aria'].includes(mod) ? { [mod]: data } :
     fn.flatifyKeys({ [mod]: data })
 )
