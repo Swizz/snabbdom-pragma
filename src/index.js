@@ -16,7 +16,9 @@ const createTextElement = (text) => !is.text(text) ? undefined : {
 const considerSvg = (vnode) => !is.svg(vnode) ? vnode :
   fn.assign(vnode,
     { data: fn.omit('props', fn.extend(vnode.data,
-      { ns: 'http://www.w3.org/2000/svg', attrs: vnode.data.props }
+      { ns: 'http://www.w3.org/2000/svg', attrs: fn.omit('className', fn.extend(vnode.data.props,
+        { class: vnode.data.props ? vnode.data.props.className : undefined }
+      )) }
     )) },
     { children: is.undefinedv(vnode.children) ? undefined :
       vnode.children.map((child) => considerSvg(child))
