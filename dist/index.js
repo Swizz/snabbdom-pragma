@@ -132,7 +132,9 @@ var createTextElement = function (text$$1) { return !text(text$$1) ? undefined :
 var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
   assign(vnode$$1,
     { data: omit('props', extend(vnode$$1.data,
-      { ns: 'http://www.w3.org/2000/svg', attrs: vnode$$1.data.props }
+      { ns: 'http://www.w3.org/2000/svg', attrs: omit('className', extend(vnode$$1.data.props,
+        { class: vnode$$1.data.props ? vnode$$1.data.props.className : undefined }
+      )) }
     )) },
     { children: undefinedv(vnode$$1.children) ? undefined :
       vnode$$1.children.map(function (child) { return considerSvg(child); })
