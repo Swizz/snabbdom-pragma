@@ -39,8 +39,10 @@ const considerProps = (data) => fn.mapObject(data,
     { props: { [key]: val } }
 )
 
+const considerKey = (data) => fn.omit('key', data)
+
 const sanitizeData = (data) => !is.object(data) ? {} :
-  considerProps(considerDataAria(fn.deepifyKeys(data)))
+  considerProps(considerDataAria(considerKey(fn.deepifyKeys(data))))
 
 const sanitizeText = (children) => !is.array(children) || children.length > 1 || !is.text(children[0]) ? undefined :
   children[0]
@@ -57,7 +59,7 @@ export const createElement = (sel, data = {}, ...children) => is.fun(sel) ? sel(
   children: sanitizeChildren(children),
   text: sanitizeText(children),
   elm: undefined,
-  key: undefined
+  key: data ? data.key : undefined
 })
 
 export default {
