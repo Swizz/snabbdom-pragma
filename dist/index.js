@@ -173,8 +173,10 @@ var considerProps = function (data) { return mapObject(data,
   }
 ); };
 
+var considerKey = function (data) { return omit('key', data); };
+
 var sanitizeData = function (data) { return !object(data) ? {} :
-  considerProps(considerDataAria(deepifyKeys(data))); };
+  considerProps(considerDataAria(considerKey(deepifyKeys(data)))); };
 
 var sanitizeText = function (children) { return !array(children) || children.length > 1 || !text(children[0]) ? undefined :
   children[0]; };
@@ -196,7 +198,7 @@ var createElement = function (sel, data) {
   children: sanitizeChildren(children),
   text: sanitizeText(children),
   elm: undefined,
-  key: undefined
+  key: data ? data.key : undefined
 });
 };
 
