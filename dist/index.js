@@ -141,7 +141,7 @@ var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
     }
   ); };
 
-var considerDataAria = function (data) { return mapObject(
+var considerData = function (data) { return mapObject(
   mapObject(data, function (ref) {
     var mod = ref[0];
     var data = ref[1];
@@ -154,12 +154,18 @@ var considerDataAria = function (data) { return mapObject(
     var mod = ref[0];
     var data = ref[1];
 
-    return !['data', 'aria'].includes(mod) ? ( obj = {}, obj[mod] = data, obj ) :
+    return mod !== 'data' ? ( obj = {}, obj[mod] = data, obj ) :
     flatifyKeys(( obj$1 = {}, obj$1[mod] = data, obj$1 ))
     var obj;
     var obj$1;
   }
 ); };
+
+var considerAria = function (data) { return data.attrs || data.aria ? omit('aria',
+  assign(data, {
+    attrs: extend(data.attrs, data.aria ? flatifyKeys({ aria: data.aria }) : {})
+  })
+) : data; };
 
 var considerProps = function (data) { return mapObject(data,
   function (ref) {
@@ -176,7 +182,7 @@ var considerProps = function (data) { return mapObject(data,
 var considerKey = function (data) { return omit('key', data); };
 
 var sanitizeData = function (data) { return !object(data) ? {} :
-  considerProps(considerDataAria(considerKey(deepifyKeys(data)))); };
+  considerProps(considerAria(considerData(considerKey(deepifyKeys(data))))); };
 
 var sanitizeText = function (children) { return !array(children) || children.length > 1 || !text(children[0]) ? undefined :
   children[0]; };
