@@ -197,7 +197,7 @@ var considerAttrs = function (data) { return mapObject(data,
 var considerKey = function (data) { return omit('key', data); };
 
 var sanitizeData = function (data) { return !object(data) ? {} :
-  considerProps(considerAria(considerData(considerKey(deepifyKeys(data))))); };
+  considerProps(considerAria(considerData(considerAttrs(considerKey(deepifyKeys(data)))))); };
 
 var sanitizeText = function (children) { return !array(children) || children.length > 1 || !text(children[0]) ? undefined :
   children[0]; };

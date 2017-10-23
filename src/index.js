@@ -56,7 +56,7 @@ const considerAttrs = (data) => fn.mapObject(data,
 const considerKey = (data) => fn.omit('key', data)
 
 const sanitizeData = (data) => !is.object(data) ? {} :
-  considerProps(considerAria(considerData(considerKey(fn.deepifyKeys(data)))))
+  considerProps(considerAria(considerData(considerAttrs(considerKey(fn.deepifyKeys(data))))))
 
 const sanitizeText = (children) => !is.array(children) || children.length > 1 || !is.text(children[0]) ? undefined :
   children[0]
