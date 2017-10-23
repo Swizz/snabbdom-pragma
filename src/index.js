@@ -45,6 +45,14 @@ const considerProps = (data) => fn.mapObject(data,
     { props: { [key]: val } }
 )
 
+const rewrites = ['for', 'role', 'tabindex']
+
+const considerAttrs = (data) => fn.mapObject(data,
+    ([key, data]) => !rewrites.includes(key) ? { [key]: data } : {
+      attrs: fn.extend(data.attrs, { [key]: data })
+    }
+)
+
 const considerKey = (data) => fn.omit('key', data)
 
 const sanitizeData = (data) => !is.object(data) ? {} :
