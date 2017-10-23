@@ -45,10 +45,18 @@ const considerProps = (data) => fn.mapObject(data,
     { props: { [key]: val } }
 )
 
+const rewrites = ['for', 'role', 'tabindex']
+
+const considerAttrs = (data) => fn.mapObject(data,
+    ([key, data]) => !rewrites.includes(key) ? { [key]: data } : {
+      attrs: fn.extend(data.attrs, { [key]: data })
+    }
+)
+
 const considerKey = (data) => fn.omit('key', data)
 
 const sanitizeData = (data) => !is.object(data) ? {} :
-  considerProps(considerAria(considerData(considerKey(fn.deepifyKeys(data)))))
+  considerProps(considerAria(considerData(considerAttrs(considerKey(fn.deepifyKeys(data))))))
 
 const sanitizeText = (children) => !is.array(children) || children.length > 1 || !is.text(children[0]) ? undefined :
   children[0]

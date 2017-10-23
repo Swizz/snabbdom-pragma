@@ -179,10 +179,25 @@ var considerProps = function (data) { return mapObject(data,
   }
 ); };
 
+var rewrites = ['for', 'role', 'tabindex'];
+
+var considerAttrs = function (data) { return mapObject(data,
+    function (ref) {
+      var key = ref[0];
+      var data = ref[1];
+
+      return !rewrites.includes(key) ? ( obj = {}, obj[key] = data, obj ) : {
+      attrs: extend(data.attrs, ( obj$1 = {}, obj$1[key] = data, obj$1 ))
+    }
+      var obj;
+      var obj$1;
+  }
+); };
+
 var considerKey = function (data) { return omit('key', data); };
 
 var sanitizeData = function (data) { return !object(data) ? {} :
-  considerProps(considerAria(considerData(considerKey(deepifyKeys(data))))); };
+  considerProps(considerAria(considerData(considerAttrs(considerKey(deepifyKeys(data)))))); };
 
 var sanitizeText = function (children) { return !array(children) || children.length > 1 || !text(children[0]) ? undefined :
   children[0]; };
