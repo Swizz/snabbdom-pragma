@@ -1,10 +1,4 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
-
-var _extend = _interopDefault(require('extend'));
+import _extend from 'extend';
 
 var undefinedv = function (v) { return v === undefined; };
 
@@ -227,5 +221,4 @@ var index = {
   createElement: createElement
 };
 
-exports.createElement = createElement;
-exports['default'] = index;
+export { createElement };export default index;

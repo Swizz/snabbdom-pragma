@@ -25,24 +25,38 @@ const considerSvg = (vnode) => !is.svg(vnode) ? vnode :
     }
   )
 
-const considerDataAria = (data) => fn.mapObject(
+const considerData = (data) => fn.mapObject(
   fn.mapObject(data, ([mod, data]) => {
     const key = fn.renameMod(mod)
     return ({ [key]: data })
   }),
-  ([mod, data]) => !['data', 'aria'].includes(mod) ? { [mod]: data } :
+  ([mod, data]) => mod !== 'data' ? { [mod]: data } :
     fn.flatifyKeys({ [mod]: data })
 )
+
+const considerAria = (data) => data.attrs || data.aria ? fn.omit('aria',
+  fn.assign(data, {
+    attrs: fn.extend(data.attrs, data.aria ? fn.flatifyKeys({ aria: data.aria }) : {})
+  })
+) : data
 
 const considerProps = (data) => fn.mapObject(data,
   ([key, val]) => is.object(val) ? { [key]: val } :
     { props: { [key]: val } }
 )
 
+const rewrites = ['for', 'role', 'tabindex']
+
+const considerAttrs = (data) => fn.mapObject(data,
+    ([key, data]) => !rewrites.includes(key) ? { [key]: data } : {
+      attrs: fn.extend(data.attrs, { [key]: data })
+    }
+)
+
 const considerKey = (data) => fn.omit('key', data)
 
 const sanitizeData = (data) => !is.object(data) ? {} :
-  considerProps(considerDataAria(considerKey(fn.deepifyKeys(data))))
+  considerProps(considerAria(considerData(considerAttrs(considerKey(fn.deepifyKeys(data))))))
 
 const sanitizeText = (children) => !is.array(children) || children.length > 1 || !is.text(children[0]) ? undefined :
   children[0]

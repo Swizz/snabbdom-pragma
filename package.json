@@ -1,6 +1,6 @@
 {
   "name": "snabbdom-pragma",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "'NotReact.createElement' pragma although for snabbdom",
   "keywords": [
     "snabbdom",
@@ -16,6 +16,7 @@
   "license": "MIT",
   "repository": "git@github.com:Swizz/snabbdom-pragma.git",
   "main": "dist/index.js",
+  "module": "dist/index.es6.js",
   "types": "snabbdom-pragma.d.ts",
   "devDependencies": {
     "ava": "^0.19.1",
@@ -39,9 +40,9 @@
     "lint": "./node_modules/.bin/xo",
     "test:prebuild": "./node_modules/.bin/ava --match 'trans -*' --match 'src -*'",
     "test:postbuild": "./node_modules/.bin/ava --match 'dist -*'",
-    "transpile": "./node_modules/.bin/buble -i src/ -o dist/ --no modules --objectAssign fn.assign",
-    "modules": "./node_modules/.bin/rollup -i dist/index.js -o dist/index.js -f cjs",
-    "clean": "./node_modules/.bin/rimraf 'dist/!(index.js)'",
+    "transpile": "./node_modules/.bin/buble -i src/ -o lib/ --no modules --objectAssign fn.assign",
+    "modules": "./node_modules/.bin/rollup -i lib/index.js -o dist/index.js -f cjs && ./node_modules/.bin/rollup -i lib/index.js -o dist/index.es6.js -f es",
+    "clean": "./node_modules/.bin/rimraf 'lib/'",
     "build": "npm run transpile && npm run modules && npm run clean",
     "make": "npm run lint && npm run test:prebuild && npm run build && npm run test:postbuild"
   },
