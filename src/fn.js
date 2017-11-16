@@ -32,10 +32,11 @@ export const deepifyKeys = (obj) => mapObject(obj,
   ([key, val]) => {
     const dashIndex = key.indexOf('-')
     if (dashIndex > -1) {
+      const moduleData = {
+        [key.slice(dashIndex + 1)]: val
+      }
       return {
-        [key.slice(0, dashIndex)]: {
-          [key.slice(dashIndex + 1)]: val
-        }
+        [key.slice(0, dashIndex)]: moduleData
       }
     }
     return { [key]: val }
