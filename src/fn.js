@@ -29,10 +29,18 @@ export const mapObject = (obj, fn) => entries(obj).map(
 )
 
 export const deepifyKeys = (obj) => mapObject(obj,
-  ([key, val]) => key.split('-').reverse().reduce(
-    (object, key) => ({ [key]: object }),
-    val
-  )
+  ([key, val]) => {
+    let dashIndex = key.indexOf('-')
+    if (dashIndex > -1) {
+      return {
+        [key.slice(0, dashIndex)]: {
+          [key.slice(dashIndex + 1)]: val
+        }
+      }
+    } else {
+      return {[key]: val}
+    }
+  }
 )
 
 export const renameMod = (name) => {
