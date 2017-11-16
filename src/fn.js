@@ -30,16 +30,15 @@ export const mapObject = (obj, fn) => entries(obj).map(
 
 export const deepifyKeys = (obj) => mapObject(obj,
   ([key, val]) => {
-    let dashIndex = key.indexOf('-')
+    const dashIndex = key.indexOf('-')
     if (dashIndex > -1) {
       return {
         [key.slice(0, dashIndex)]: {
           [key.slice(dashIndex + 1)]: val
         }
       }
-    } else {
-      return {[key]: val}
     }
+    return { [key]: val }
   }
 )
 
