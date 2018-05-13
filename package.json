@@ -29,6 +29,7 @@
     "eslint-config-xo-swizz": "^0.11.0",
     "rimraf": "^2.6.1",
     "rollup": "^0.41.3",
+    "simple-git": "^1.92.0",
     "snabbdom": "^0.6.7",
     "traceur": "^0.0.111",
     "typescript": "^2.3.2",
@@ -45,7 +46,9 @@
     "modules": "rollup -i lib/index.js -o dist/index.js -f cjs && rollup -i lib/index.js -o dist/index.es6.js -f es",
     "clean": "./node_modules/.bin/rimraf 'lib/'",
     "build": "npm run transpile && npm run modules && npm run clean",
-    "make": "npm run lint && npm run test:prebuild && npm run build && npm run test:postbuild"
+    "make": "npm run lint && npm run test:prebuild && npm run build && npm run test:postbuild",
+    "perf:all": "node perf/buildBranches && node perf/run",
+    "perf": "node perf/run"
   },
   "ava": {
     "files": [
