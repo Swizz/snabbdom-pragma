@@ -59,10 +59,12 @@ const sanitizeData = (data) => considerProps(considerAria(considerData(considerA
 
 const sanitizeText = (children) => children.length > 1 || !is.text(children[0]) ? undefined : children[0]
 
-const sanitizeChildren = (children) => fn.flatten(children).map(
-    (child) => is.vnode(child) ? child :
-      createTextElement(child)
-  )
+const sanitizeChildren = (children) => fn.reduceDeep(children, (acc, child) => {
+      const vnode = is.vnode(child) ? child : createTextElement(child)
+      acc.push(vnode)
+      return acc
+    }
+  , [])
 
 export const createElement = (sel, data, ...children) => {  
   if (is.fun(sel)) {

@@ -7,11 +7,18 @@ export const extend = (...objs) => _extend(true, ...objs)
 
 export const assign = (...objs) => _extend(false, ...objs)
 
-export const flatten = (arr) => arr.reduce(
-  (acc, curr) => !is.array(curr) ? [...acc, curr] :
-    [...acc, ...flatten(curr)],
-  []
-)
+export const reduceDeep = (arr, fn, initial) => {
+  let result = initial
+  for (let i = 0; i < arr.length; i++) {
+    let value = arr[i]
+    if (is.array(value)) {
+      result = reduceDeep(value, fn, result)
+    } else {
+      result = fn(result, value)
+    }    
+  }
+  return result
+}
 
 export const mapObject = (obj, fn) => Object.keys(obj).map(
   (key) => fn(key, obj[key])
