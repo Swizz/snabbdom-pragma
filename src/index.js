@@ -75,7 +75,7 @@ export const createElement = (sel, data, ...children) => {
     children: sanitizeChildren(children),
     text: sanitizeText(children),
     elm: undefined,
-    key: data ? data.key : undefined
+    key: data.key
   })
 }
 
