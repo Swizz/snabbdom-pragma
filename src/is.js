@@ -22,9 +22,8 @@ export const vnode = (v) => object(v) &&
     (k) => k in v
   )
 
-const svgProps = [
-  'svg', 'circle', 'ellipse', 'line', 'polygon',
-  'polyline', 'rect', 'g', 'path', 'text'
-]
+const svgPropsMap = {svg: 1, circle: 1, ellipse: 1, line: 1, polygon: 1,
+polyline: 1, rect: 1, g: 1, path: 1, text: 1}  
 
-export const svg = (v) => svgProps.includes(v.sel)
+
+export const svg = (v) => v.sel in svgPropsMap

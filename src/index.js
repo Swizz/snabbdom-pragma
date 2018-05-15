@@ -43,10 +43,10 @@ const considerProps = (data) => fn.mapObject(data,
     { props: { [key]: val } }
 )
 
-const rewrites = ['for', 'role', 'tabindex']
+const rewritesMap = {for: 1, role: 1, tabindex: 1}
 
 const considerAttrs = (data) => fn.mapObject(data,
-    (key, data) => !rewrites.includes(key) ? { [key]: data } : {
+    (key, data) => !(key in rewritesMap) ? { [key]: data } : {
       attrs: fn.extend(data.attrs, { [key]: data })
     }
 )
