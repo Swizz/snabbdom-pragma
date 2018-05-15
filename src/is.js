@@ -11,7 +11,7 @@ export const text = (v) => string(v) || number(v)
 
 export const array = (v) => Array.isArray(v)
 
-export const object = (v) => v === Object(v)
+export const object = (v) => typeof v === 'object' && !!v
 
 export const fun = (v) => typeof v === 'function'
 
