@@ -53,7 +53,9 @@ const considerAttrs = (data) => fn.mapObject(data,
     }
 )
 
-const considerKey = (data) => fn.omit('key', data)
+const considerKey = (data) => {
+  return 'key' in data ? fn.omit('key', data) : data
+}
 
 const sanitizeData = (data) => !is.object(data) ? {} :
   considerProps(considerAria(considerData(considerAttrs(considerKey(fn.deepifyKeys(data))))))
