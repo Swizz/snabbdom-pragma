@@ -61,24 +61,26 @@ const sanitizeData = (data) => considerProps(considerAria(considerData(considerA
 
 const sanitizeText = (children) => children.length > 1 || !is.text(children[0]) ? undefined : children[0]
 
-const sanitizeChildren = (children) => is.text(sanitizeText(children)) ? undefined :
-  fn.flatten(children).map(
+const sanitizeChildren = (children) => fn.flatten(children).map(
     (child) => is.vnode(child) ? child :
       createTextElement(child)
   )
 
 export const createElement = (sel, data, ...children) => {
-  if (!data) {
-    data = {}
-  }
-  return is.fun(sel) ? sel(data, children) : considerSvg({
-    sel,
-    data: sanitizeData(data),
-    children: sanitizeChildren(children),
-    text: sanitizeText(children),
-    elm: undefined,
-    key: data.key
-  })
+  if (data == null) data = {}
+  if (is.fun(sel)) {
+    return sel(data, children)
+  } else {
+    const text = sanitizeText(children) 
+    return considerSvg({
+      sel,
+      data: sanitizeData(data),
+      children: text ? undefined : sanitizeChildren(children),
+      text: text,
+      elm: undefined,
+      key: data.key
+    })
+  }  
 }
 
 export default {
