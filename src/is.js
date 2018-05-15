@@ -15,12 +15,16 @@ export const object = (v) => typeof v === 'object' && !!v
 
 export const fun = (v) => typeof v === 'function'
 
+const vnodeProps = ['sel', 'data', 'children', 'text', 'elm', 'key']
+
 export const vnode = (v) => object(v) &&
-  ['sel', 'data', 'children', 'text', 'elm', 'key'].every(
+  vnodeProps.every(
     (k) => k in v
   )
 
-export const svg = (v) => [
+const svgProps = [
   'svg', 'circle', 'ellipse', 'line', 'polygon',
   'polyline', 'rect', 'g', 'path', 'text'
-].includes(v.sel)
+]
+
+export const svg = (v) => svgProps.includes(v.sel)
