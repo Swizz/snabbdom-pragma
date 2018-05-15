@@ -57,13 +57,11 @@ const considerKey = (data) => {
   return 'key' in data ? fn.omit('key', data) : data
 }
 
-const sanitizeData = (data) => !is.object(data) ? {} :
-  considerProps(considerAria(considerData(considerAttrs(considerKey(fn.deepifyKeys(data))))))
+const sanitizeData = (data) => considerProps(considerAria(considerData(considerAttrs(considerKey(fn.deepifyKeys(data))))))
 
-const sanitizeText = (children) => !is.array(children) || children.length > 1 || !is.text(children[0]) ? undefined :
-  children[0]
+const sanitizeText = (children) => children.length > 1 || !is.text(children[0]) ? undefined : children[0]
 
-const sanitizeChildren = (children) => !is.array(children) || is.text(sanitizeText(children)) ? undefined :
+const sanitizeChildren = (children) => is.text(sanitizeText(children)) ? undefined :
   fn.flatten(children).map(
     (child) => is.vnode(child) ? child :
       createTextElement(child)
