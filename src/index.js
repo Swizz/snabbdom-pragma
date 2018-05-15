@@ -66,19 +66,18 @@ const sanitizeChildren = (children) => fn.flatten(children).map(
       createTextElement(child)
   )
 
-export const createElement = (sel, data, ...children) => {
-  if (data == null) data = {}
+export const createElement = (sel, data, ...children) => {  
   if (is.fun(sel)) {
-    return sel(data, children)
+    return sel(data || {}, children)
   } else {
     const text = sanitizeText(children) 
     return considerSvg({
       sel,
-      data: sanitizeData(data),
+      data: data ? sanitizeData(data) : {},
       children: text ? undefined : sanitizeChildren(children),
       text: text,
       elm: undefined,
-      key: data.key
+      key: data ? data.key : undefined
     })
   }  
 }
