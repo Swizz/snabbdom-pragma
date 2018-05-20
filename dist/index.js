@@ -74,11 +74,15 @@ var deepifyKeys = function (obj) { return mapObject(obj,
     var key = ref[0];
     var val = ref[1];
 
-    return key.split('-').reverse().reduce(
-    function (object$$1, key) { return (( obj = {}, obj[key] = object$$1, obj ))
-      var obj; },
-    val
-  );
+    var dashIndex = key.indexOf('-');
+    if (dashIndex > -1) {
+      var moduleData = {};
+      moduleData[key.slice(dashIndex + 1)] = val;
+      return ( obj = {}, obj[key.slice(0, dashIndex)] = moduleData, obj )
+      var obj;
+    }
+    return ( obj$1 = {}, obj$1[key] = val, obj$1 )
+    var obj$1;
   }
 ); };
 
@@ -209,10 +213,10 @@ var sanitizeChildren = function (children) { return !array(children) || text(san
   ); };
 
 var createElement = function (sel, data) {
+  if ( data === void 0 ) data = {};
   var children = [], len = arguments.length - 2;
   while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
 
-  if ( data === void 0 ) data = {};
   return fun(sel) ? sel(data, children) : considerSvg({
   sel: sel,
   data: sanitizeData(data),
