@@ -47,7 +47,7 @@
     "clean": "./node_modules/.bin/rimraf 'lib/'",
     "build": "npm run transpile && npm run modules && npm run clean",
     "make": "npm run lint && npm run test:prebuild && npm run build && npm run test:postbuild",
-    "perf:all": "node perf/buildBranches && node perf/run",
+    "perf:all": "node perf/build-branches && node perf/run",
     "perf": "node perf/run"
   },
   "ava": {

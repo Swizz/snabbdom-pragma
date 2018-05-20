@@ -1,179 +1,184 @@
-var Benchmark = require('benchmark');
-var baseCreateElement = require('./snnabdom-base').createElement
-var newCreateElement = require('./snnabdom-new').createElement
+/* eslint import/no-unresolved: 0 */
 
+const Benchmark = require('benchmark')
+const baseCreateElement = require('./snnabdom-base').createElement
+const newCreateElement = require('./snnabdom-new').createElement
 
 function realWorldForm(createElement) {
-  var state = {};
-  var patient = {get() {}};
-  var clinicalCalcs = {get() {}, isEmpty() {return false}, keys() {return ['a', 'b', 'c', 'd', 'e']}};
+  const state = {}
+  const patient = { get() {} }
+  const clinicalCalcs = {
+    get() {},
+    isEmpty() {return false},
+    keys() {return ['a', 'b', 'c', 'd', 'e']}
+  }
   return createElement(
-    "div",
-    { className: "page compact-content" },
+    'div',
+    { className: 'page compact-content' },
    createElement(
-      "div",
-      { className: "navbar" },
+      'div',
+      { className: 'navbar' },
      createElement(
-        "div",
-        { className: "navbar-inner" },
+        'div',
+        { className: 'navbar-inner' },
        createElement(
-          "div",
-          { className: "left" },
+          'div',
+          { className: 'left' },
          createElement(
-            "a",
-            { href: "#", className: "link icon-only back" },
-           createElement("i", { className: "icon icon-back" })
+            'a',
+            { href: '#', className: 'link icon-only back' },
+           createElement('i', { className: 'icon icon-back' })
           )
         ),
        createElement(
-          "div",
-          { className: "center sliding" },
-          "Exames do Paciente"
+          'div',
+          { className: 'center sliding' },
+          'Exames do Paciente'
         ),
-       createElement("div", { className: "right" })
+       createElement('div', { className: 'right' })
       )
     ),
    createElement(
-      "div",
-      { className: "page-content" },
+      'div',
+      { className: 'page-content' },
      createElement(
-        "div",
-        { className: "content-block" },
+        'div',
+        { className: 'content-block' },
        createElement(
-          "h3",
+          'h3',
           null,
-          patient.get('name'),          
-          " anos",
-         createElement("br", null),
+          patient.get('name'),
+          ' anos',
+         createElement('br', null),
          createElement(
-            "span",
-            { className: "header-subtitle" },
+            'span',
+            { className: 'header-subtitle' },
             patient.get('sectorname') || '',
-            " Leito ",
+            ' Leito ',
             (patient.get('bednumber') || '').padStart(2, '0')
           )
         )
       ),
      createElement(
-        "div",
-        { className: "content-block" },
+        'div',
+        { className: 'content-block' },
        createElement(
-          "div",
-          { className: "row" },
+          'div',
+          { className: 'row' },
          createElement(
-            "div",
-            { className: "col" },
+            'div',
+            { className: 'col' },
            createElement(
-              "b",
+              'b',
               null,
-              "Registro"
+              'Registro'
             ),
-           createElement("br", null),
+           createElement('br', null),
             patient.get('registry'),
-            " ",
-           createElement("br", null)
+            ' ',
+           createElement('br', null)
           ),
          createElement(
-            "div",
-            { className: "col" },
+            'div',
+            { className: 'col' },
            createElement(
-              "b",
+              'b',
               null,
-              "Admiss\xE3o Hospitalar"
+              'Admiss\xE3o Hospitalar'
             ),
-           createElement("br", null),           
-            " ",
-           createElement("br", null)
+           createElement('br', null),
+            ' ',
+           createElement('br', null)
           )
         )
       ),
      createElement(
-        "div",
-        { className: "list-block" },
+        'div',
+        { className: 'list-block' },
        createElement(
-          "ul",
+          'ul',
           null,
          createElement(
-            "li",
-            { id: "clinical-calcs", className: "accordion-item" },
+            'li',
+            { id: 'clinical-calcs', className: 'accordion-item' },
            createElement(
-              "a",
-              { href: "#", className: "item-content item-link" },
+              'a',
+              { href: '#', className: 'item-content item-link' },
              createElement(
-                "div",
-                { className: "item-inner" },
+                'div',
+                { className: 'item-inner' },
                createElement(
-                  "div",
-                  { className: "item-title" },
-                  "C\xE1lculos"
+                  'div',
+                  { className: 'item-title' },
+                  'C\xE1lculos'
                 )
               )
             ),
            createElement(
-              "div",
-              { className: "content-block" },
+              'div',
+              { className: 'content-block' },
              createElement(
-                "div",
-                { className: "accordion-item-content" },
+                'div',
+                { className: 'accordion-item-content' },
                 clinicalCalcs ? createElement(
-                  "div",
+                  'div',
                   null,
-                  " ",
+                  ' ',
                  createElement(
-                    "div",
-                    { className: "card-content" },
+                    'div',
+                    { className: 'card-content' },
                     !clinicalCalcs.isEmpty() ? createElement(
-                      "div",
-                      { className: "list-block media-list" },
-                      clinicalCalcs.keys().map(function (calcKey) {
+                      'div',
+                      { className: 'list-block media-list' },
+                      clinicalCalcs.keys().map((calcKey) => {
                         return createElement(
-                          "ul",
+                          'ul',
                           null,
                          createElement(
-                            "li",
+                            'li',
                             null,
                            createElement(
-                              "a",
-                              { href: "#", className: "item-link item-content calc-item", data: { calcKey: calcKey } },
+                              'a',
+                              { href: '#', className: 'item-link item-content calc-item', data: { calcKey } },
                              createElement(
-                                "div",
-                                { className: "item-inner" },
+                                'div',
+                                { className: 'item-inner' },
                                createElement(
-                                  "div",
-                                  { className: "item-title-row" },
+                                  'div',
+                                  { className: 'item-title-row' },
                                  createElement(
-                                    "div",
-                                    { className: "item-title" },
+                                    'div',
+                                    { className: 'item-title' },
                                     clinicalCalcs.get(calcKey)
                                   )
                                 ),
                                createElement(
-                                  "div",
-                                  { className: "item-text" },
+                                  'div',
+                                  { className: 'item-text' },
                                   clinicalCalcs.get(calcKey) || ''
                                 )
                               )
                             )
                           )
-                        );
+                        )
                       })
                     ) : 'Nenhum cálculo salvo'
                   ),
                  createElement(
-                    "div",
-                    { className: "card-footer" },
-                   createElement("div", null),
-                    " ",
+                    'div',
+                    { className: 'card-footer' },
+                   createElement('div', null),
+                    ' ',
                    createElement(
-                      "a",
-                      { href: "#", id: "add-calc-item", className: "link" },
-                      "Adicionar"
+                      'a',
+                      { href: '#', id: 'add-calc-item', className: 'link' },
+                      'Adicionar'
                     )
                   )
-                ) :createElement(
-                  "div",
-                  { className: "text-center" },
-                 createElement("span", { className: "preloader" })
+                ) : createElement(
+                  'div',
+                  { className: 'text-center' },
+                 createElement('span', { className: 'preloader' })
                 )
               )
             )
@@ -182,17 +187,17 @@ function realWorldForm(createElement) {
       ),
      createElement('div', { data: state.testsTableData })
     )
-  );
+  )
 }
 
-var suite = new Benchmark.Suite('real world form');
+const suite = new Benchmark.Suite('real world form')
 
 // add tests
-suite.add('jsx-base', function() {
+suite.add('jsx-base', () => {
   realWorldForm(baseCreateElement)
-})
-.add('jsx-new', function() {
+}).
+add('jsx-new', () => {
   realWorldForm(newCreateElement)
-});
+})
 
 module.exports = suite

@@ -1,33 +1,35 @@
-var Benchmark = require('benchmark');
-var h = require('snabbdom/h').default;
-var baseCreateElement = require('./snnabdom-base').createElement
-var newCreateElement = require('./snnabdom-new').createElement
+/* eslint import/no-unresolved: 0 */
 
-function noPropsHyper () {
+const Benchmark = require('benchmark')
+const h = require('snabbdom/h').default
+const baseCreateElement = require('./snnabdom-base').createElement
+const newCreateElement = require('./snnabdom-new').createElement
+
+function noPropsHyper() {
   return h('div', {}, [
     h('span', {}, 'Hello'),
     h('span', {}, 'World')
   ])
 }
 
-function noProps (createElement) {
+function noProps(createElement) {
   return createElement('div', null, [
     createElement('span', null, 'Hello'),
     createElement('span', null, 'World')
   ])
 }
 
-var suite = new Benchmark.Suite('no props');
+const suite = new Benchmark.Suite('no props')
 
 // add tests
-suite.add('hyperscript', function() {
+suite.add('hyperscript', () => {
   noPropsHyper()
-})
-.add('jsx-base', function() {
+}).
+add('jsx-base', () => {
   noProps(baseCreateElement)
-})
-.add('jsx-new', function() {
+}).
+add('jsx-new', () => {
   noProps(newCreateElement)
-});
+})
 
 module.exports = suite
