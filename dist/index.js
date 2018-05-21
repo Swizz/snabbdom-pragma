@@ -45,35 +45,21 @@ var assign = function () {
   return _extend.apply(void 0, [ false ].concat( objs ));
 };
 
-var entries = function (obj) { return Object.keys(obj).map(
-  function (key) { return [key, obj[key]]; }
-); };
-
-
-
 var flatten = function (arr) { return arr.reduce(
   function (acc, curr) { return !array(curr) ? acc.concat( [curr]) :
     acc.concat( flatten(curr)); },
   []
 ); };
 
-var mapObject = function (obj, fn) { return entries(obj).map(
-  function (ref) {
-    var key = ref[0];
-    var val = ref[1];
-
-    return fn([key, val]);
-  }
+var mapObject = function (obj, fn) { return Object.keys(obj).map(
+  function (key) { return fn(key, obj[key]); }
 ).reduce(
   function (acc, curr) { return extend(acc, curr); },
   {}
 ); };
 
 var deepifyKeys = function (obj) { return mapObject(obj,
-  function (ref) {
-    var key = ref[0];
-    var val = ref[1];
-
+  function (key, val) {
     var dashIndex = key.indexOf('-');
     if (dashIndex > -1) {
       var moduleData = {};
@@ -94,32 +80,17 @@ var renameMod = function (name) {
 };
 
 var flatifyKeys = function (obj) { return mapObject(obj,
-  function (ref) {
-    var mod = ref[0];
-    var data = ref[1];
-
-    return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
+  function (mod, data) { return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
     flatifyKeys(data),
-    function (ref) {
-      var key = ref[0];
-      var val = ref[1];
-
-      return (( obj = {}, obj[(mod + "-" + key)] = val, obj ))
-      var obj;
-    }
+    function (key, val) { return (( obj = {}, obj[(mod + "-" + key)] = val, obj ))
+      var obj; }
   )
-    var obj;
-  }
+    var obj; }
 ); };
 
 var omit = function (key, obj) { return mapObject(obj,
-  function (ref) {
-    var mod = ref[0];
-    var data = ref[1];
-
-    return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {}
-    var obj;
-  }
+  function (mod, data) { return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {}
+    var obj; }
 ); };
 
 // Const fnName = (...params) => guard ? default : ...
@@ -146,23 +117,15 @@ var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
   ); };
 
 var considerData = function (data) { return mapObject(
-  mapObject(data, function (ref) {
-    var mod = ref[0];
-    var data = ref[1];
-
+  mapObject(data, function (mod, data) {
     var key = renameMod(mod);
     return (( obj = {}, obj[key] = data, obj ))
     var obj;
   }),
-  function (ref) {
-    var mod = ref[0];
-    var data = ref[1];
-
-    return mod !== 'data' ? ( obj = {}, obj[mod] = data, obj ) :
+  function (mod, data) { return mod !== 'data' ? ( obj = {}, obj[mod] = data, obj ) :
     flatifyKeys(( obj$1 = {}, obj$1[mod] = data, obj$1 ))
     var obj;
-    var obj$1;
-  }
+    var obj$1; }
 ); };
 
 var considerAria = function (data) { return data.attrs || data.aria ? omit('aria',
@@ -172,30 +135,20 @@ var considerAria = function (data) { return data.attrs || data.aria ? omit('aria
 ) : data; };
 
 var considerProps = function (data) { return mapObject(data,
-  function (ref) {
-    var key = ref[0];
-    var val = ref[1];
-
-    return object(val) ? ( obj = {}, obj[key] = val, obj ) :
+  function (key, val) { return object(val) ? ( obj = {}, obj[key] = val, obj ) :
     { props: ( obj$1 = {}, obj$1[key] = val, obj$1 ) }
     var obj;
-    var obj$1;
-  }
+    var obj$1; }
 ); };
 
 var rewrites = ['for', 'role', 'tabindex'];
 
 var considerAttrs = function (data) { return mapObject(data,
-    function (ref) {
-      var key = ref[0];
-      var data = ref[1];
-
-      return !rewrites.includes(key) ? ( obj = {}, obj[key] = data, obj ) : {
+    function (key, data) { return !rewrites.includes(key) ? ( obj = {}, obj[key] = data, obj ) : {
       attrs: extend(data.attrs, ( obj$1 = {}, obj$1[key] = data, obj$1 ))
     }
       var obj;
-      var obj$1;
-  }
+      var obj$1; }
 ); };
 
 var considerKey = function (data) { return omit('key', data); };
