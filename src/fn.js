@@ -13,11 +13,12 @@ export const flatten = (arr) => arr.reduce(
   []
 )
 
-export const mapObject = (obj, fn) => {
-  return Object.keys(obj)
-    .map(key => fn(key, obj[key]))
-    .reduce((acc, curr) => extend(acc, curr), {})
-}
+export const mapObject = (obj, fn) => Object.keys(obj).map(
+  (key) => fn(key, obj[key])
+).reduce(
+  (acc, curr) => extend(acc, curr),
+  {}
+)
 
 export const deepifyKeys = (obj) => mapObject(obj,
   (key, val) => {
