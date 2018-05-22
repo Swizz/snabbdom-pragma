@@ -166,18 +166,20 @@ var sanitizeChildren = function (children) { return !array(children) || text(san
   ); };
 
 var createElement = function (sel, data) {
-  if ( data === void 0 ) data = {};
   var children = [], len = arguments.length - 2;
   while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
 
+  if (!data) {
+    data = {};
+  }
   return fun(sel) ? sel(data, children) : considerSvg({
-  sel: sel,
-  data: sanitizeData(data),
-  children: sanitizeChildren(children),
-  text: sanitizeText(children),
-  elm: undefined,
-  key: data ? data.key : undefined
-});
+    sel: sel,
+    data: sanitizeData(data),
+    children: sanitizeChildren(children),
+    text: sanitizeText(children),
+    elm: undefined,
+    key: data.key
+  })
 };
 
 var index = {

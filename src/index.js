@@ -67,14 +67,19 @@ const sanitizeChildren = (children) => !is.array(children) || is.text(sanitizeTe
       createTextElement(child)
   )
 
-export const createElement = (sel, data = {}, ...children) => is.fun(sel) ? sel(data, children) : considerSvg({
-  sel,
-  data: sanitizeData(data),
-  children: sanitizeChildren(children),
-  text: sanitizeText(children),
-  elm: undefined,
-  key: data ? data.key : undefined
-})
+export const createElement = (sel, data, ...children) => {
+  if (!data) {
+    data = {}
+  }
+  return is.fun(sel) ? sel(data, children) : considerSvg({
+    sel,
+    data: sanitizeData(data),
+    children: sanitizeChildren(children),
+    text: sanitizeText(children),
+    elm: undefined,
+    key: data.key
+  })
+}
 
 export default {
   createElement
