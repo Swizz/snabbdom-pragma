@@ -10,12 +10,12 @@ export const assign = (...objs) => _extend(false, ...objs)
 export const reduceDeep = (arr, fn, initial) => {
   let result = initial
   for (let i = 0; i < arr.length; i++) {
-    let value = arr[i]
+    const value = arr[i]
     if (is.array(value)) {
       result = reduceDeep(value, fn, result)
     } else {
       result = fn(result, value)
-    }    
+    }
   }
   return result
 }

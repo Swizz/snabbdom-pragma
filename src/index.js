@@ -43,7 +43,7 @@ const considerProps = (data) => fn.mapObject(data,
     { props: { [key]: val } }
 )
 
-const rewritesMap = {for: 1, role: 1, tabindex: 1}
+const rewritesMap = { for: 1, role: 1, tabindex: 1 }
 
 const considerAttrs = (data) => fn.mapObject(data,
     (key, data) => !(key in rewritesMap) ? { [key]: data } : {
@@ -60,26 +60,25 @@ const sanitizeData = (data) => considerProps(considerAria(considerData(considerA
 const sanitizeText = (children) => children.length > 1 || !is.text(children[0]) ? undefined : children[0]
 
 const sanitizeChildren = (children) => fn.reduceDeep(children, (acc, child) => {
-      const vnode = is.vnode(child) ? child : createTextElement(child)
-      acc.push(vnode)
-      return acc
-    }
-  , [])
+  const vnode = is.vnode(child) ? child : createTextElement(child)
+  acc.push(vnode)
+  return acc
+}
+, [])
 
-export const createElement = (sel, data, ...children) => {  
+export const createElement = (sel, data, ...children) => {
   if (is.fun(sel)) {
     return sel(data || {}, children)
-  } else {
-    const text = sanitizeText(children) 
-    return considerSvg({
-      sel,
-      data: data ? sanitizeData(data) : {},
-      children: text ? undefined : sanitizeChildren(children),
-      text: text,
-      elm: undefined,
-      key: data ? data.key : undefined
-    })
-  }  
+  }
+  const text = sanitizeText(children)
+  return considerSvg({
+    sel,
+    data: data ? sanitizeData(data) : {},
+    children: text ? undefined : sanitizeChildren(children),
+    text,
+    elm: undefined,
+    key: data ? data.key : undefined
+  })
 }
 
 export default {
