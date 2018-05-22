@@ -68,7 +68,9 @@ const sanitizeChildren = (children) => !is.array(children) || is.text(sanitizeTe
   )
 
 export const createElement = (sel, data, ...children) => {
-  if (data == null) data = {}
+  if (!data) {
+    data = {}
+  }
   return is.fun(sel) ? sel(data, children) : considerSvg({
     sel,
     data: sanitizeData(data),
