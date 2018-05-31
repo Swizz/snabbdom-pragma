@@ -25,14 +25,12 @@ const considerSvg = (vnode) => !is.svg(vnode) ? vnode :
     }
   )
 
-const considerData = (data) => fn.mapObject(
-  fn.mapObject(data, (mod, data) => {
-    const key = fn.renameMod(mod)
+const considerData = (data) => {
+  return !data.data ? data : fn.mapObject(data, (mod, data) => {
+    const key = mod === 'data' ? 'dataset' : mod
     return ({ [key]: data })
-  }),
-  (mod, data) => mod !== 'data' ? { [mod]: data } :
-    fn.flatifyKeys({ [mod]: data })
-)
+  })
+}
 
 const considerAria = (data) => data.attrs || data.aria ? fn.omit('aria',
   fn.assign(data, {
@@ -45,39 +43,41 @@ const considerProps = (data) => fn.mapObject(data,
     { props: { [key]: val } }
 )
 
-const rewrites = ['for', 'role', 'tabindex']
+const rewritesMap = { for: 1, role: 1, tabindex: 1 }
 
 const considerAttrs = (data) => fn.mapObject(data,
-    (key, data) => !rewrites.includes(key) ? { [key]: data } : {
+    (key, data) => !(key in rewritesMap) ? { [key]: data } : {
       attrs: fn.extend(data.attrs, { [key]: data })
     }
 )
 
-const considerKey = (data) => fn.omit('key', data)
+const considerKey = (data) => {
+  return 'key' in data ? fn.omit('key', data) : data
+}
 
-const sanitizeData = (data) => !is.object(data) ? {} :
-  considerProps(considerAria(considerData(considerAttrs(considerKey(fn.deepifyKeys(data))))))
+const sanitizeData = (data) => considerProps(considerAria(considerData(considerAttrs(considerKey(fn.deepifyKeys(data))))))
 
-const sanitizeText = (children) => !is.array(children) || children.length > 1 || !is.text(children[0]) ? undefined :
-  children[0]
+const sanitizeText = (children) => children.length > 1 || !is.text(children[0]) ? undefined : children[0]
 
-const sanitizeChildren = (children) => !is.array(children) || is.text(sanitizeText(children)) ? undefined :
-  fn.flatten(children).map(
-    (child) => is.vnode(child) ? child :
-      createTextElement(child)
-  )
+const sanitizeChildren = (children) => fn.reduceDeep(children, (acc, child) => {
+  const vnode = is.vnode(child) ? child : createTextElement(child)
+  acc.push(vnode)
+  return acc
+}
+, [])
 
 export const createElement = (sel, data, ...children) => {
-  if (!data) {
-    data = {}
+  if (is.fun(sel)) {
+    return sel(data || {}, children)
   }
-  return is.fun(sel) ? sel(data, children) : considerSvg({
+  const text = sanitizeText(children)
+  return considerSvg({
     sel,
-    data: sanitizeData(data),
-    children: sanitizeChildren(children),
-    text: sanitizeText(children),
+    data: data ? sanitizeData(data) : {},
+    children: text ? undefined : sanitizeChildren(children),
+    text,
     elm: undefined,
-    key: data.key
+    key: data ? data.key : undefined
   })
 }
 

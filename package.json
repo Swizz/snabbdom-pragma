@@ -40,7 +40,7 @@
   },
   "scripts": {
     "lint": "./node_modules/.bin/xo",
-    "test:prebuild": "ava --match \"trans -*\" --match \"src -*\"",
+    "test:prebuild": "ava --match \"trans -*\" --match \"src -*\" --match \"utils -*\"",
     "test:postbuild": "ava --match \"dist -*\"",
     "transpile": "./node_modules/.bin/buble -i src/ -o lib/ --no modules --objectAssign fn.assign",
     "modules": "rollup -i lib/index.js -o dist/index.js -f cjs && rollup -i lib/index.js -o dist/index.es6.js -f es",
