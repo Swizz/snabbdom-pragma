@@ -7,48 +7,48 @@ export const extend = (...objs) => _extend(true, ...objs)
 
 export const assign = (...objs) => _extend(false, ...objs)
 
-export const entries = (obj) => Object.keys(obj).map(
-  (key) => [key, obj[key]]
-)
+export const reduceDeep = (arr, fn, initial) => {
+  let result = initial
+  for (let i = 0; i < arr.length; i++) {
+    const value = arr[i]
+    if (is.array(value)) {
+      result = reduceDeep(value, fn, result)
+    } else {
+      result = fn(result, value)
+    }
+  }
+  return result
+}
 
-export const values = (obj) => Object.keys(obj).map(
-  (key) => obj[key]
-)
-
-export const flatten = (arr) => arr.reduce(
-  (acc, curr) => !is.array(curr) ? [...acc, curr] :
-    [...acc, ...flatten(curr)],
-  []
-)
-
-export const mapObject = (obj, fn) => entries(obj).map(
-  ([key, val]) => fn([key, val])
+export const mapObject = (obj, fn) => Object.keys(obj).map(
+  (key) => fn(key, obj[key])
 ).reduce(
   (acc, curr) => extend(acc, curr),
   {}
 )
 
 export const deepifyKeys = (obj) => mapObject(obj,
-  ([key, val]) => key.split('-').reverse().reduce(
-    (object, key) => ({ [key]: object }),
-    val
-  )
+  (key, val) => {
+    const dashIndex = key.indexOf('-')
+    if (dashIndex > -1) {
+      const moduleData = {
+        [key.slice(dashIndex + 1)]: val
+      }
+      return {
+        [key.slice(0, dashIndex)]: moduleData
+      }
+    }
+    return { [key]: val }
+  }
 )
 
-export const renameMod = (name) => {
-  switch (name) {
-    case 'data': return 'dataset'
-    default: return name
-  }
-}
-
 export const flatifyKeys = (obj) => mapObject(obj,
-  ([mod, data]) => !is.object(data) ? ({ [mod]: data }) : mapObject(
+  (mod, data) => !is.object(data) ? ({ [mod]: data }) : mapObject(
     flatifyKeys(data),
-    ([key, val]) => ({ [`${mod}-${key}`]: val })
+    (key, val) => ({ [`${mod}-${key}`]: val })
   )
 )
 
 export const omit = (key, obj) => mapObject(obj,
-  ([mod, data]) => mod !== key ? ({ [mod]: data }) : {}
+  (mod, data) => mod !== key ? ({ [mod]: data }) : {}
 )

@@ -43,9 +43,11 @@ fs.readdirSync(fixturesDir).forEach((caseName) => {
       }
     ).code
 
-    const transform = fs.readFileSync(
+    let transform = fs.readFileSync(
       path.join(fixtureDir, 'transform-babel.js')
     ).toString()
+
+    transform = transform.replace(/\r/gm, '')
 
     t.is(actual.trim(), transform.trim())
   })
@@ -63,9 +65,11 @@ fs.readdirSync(fixturesDir).forEach((caseName) => {
       }
     )
 
-    const transform = fs.readFileSync(
+    let transform = fs.readFileSync(
       path.join(fixtureDir, 'transform-traceur.js')
     ).toString()
+
+    transform = transform.replace(/\r/gm, '')
 
     t.is(actual.trim(), transform.trim())
   })

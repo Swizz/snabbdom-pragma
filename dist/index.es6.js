@@ -10,19 +10,16 @@ var text = function (v) { return string(v) || number(v); };
 
 var array = function (v) { return Array.isArray(v); };
 
-var object = function (v) { return v === Object(v); };
+var object = function (v) { return typeof v === 'object' && v !== null; };
 
 var fun = function (v) { return typeof v === 'function'; };
 
-var vnode = function (v) { return object(v) &&
-  ['sel', 'data', 'children', 'text', 'elm', 'key'].every(
-    function (k) { return k in v; }
-  ); };
+var vnode = function (v) { return object(v) && 'sel' in v && 'data' in v && 'children' in v && 'text' in v; };
 
-var svg = function (v) { return [
-  'svg', 'circle', 'ellipse', 'line', 'polygon',
-  'polyline', 'rect', 'g', 'path', 'text'
-].includes(v.sel); };
+var svgPropsMap = { svg: 1, circle: 1, ellipse: 1, line: 1, polygon: 1,
+  polyline: 1, rect: 1, g: 1, path: 1, text: 1 };
+
+var svg = function (v) { return v.sel in svgPropsMap; };
 
 // TODO: stop using extend here
 var extend = function () {
@@ -39,77 +36,52 @@ var assign = function () {
   return _extend.apply(void 0, [ false ].concat( objs ));
 };
 
-var entries = function (obj) { return Object.keys(obj).map(
-  function (key) { return [key, obj[key]]; }
-); };
-
-
-
-var flatten = function (arr) { return arr.reduce(
-  function (acc, curr) { return !array(curr) ? acc.concat( [curr]) :
-    acc.concat( flatten(curr)); },
-  []
-); };
-
-var mapObject = function (obj, fn) { return entries(obj).map(
-  function (ref) {
-    var key = ref[0];
-    var val = ref[1];
-
-    return fn([key, val]);
+var reduceDeep = function (arr, fn, initial) {
+  var result = initial;
+  for (var i = 0; i < arr.length; i++) {
+    var value = arr[i];
+    if (array(value)) {
+      result = reduceDeep(value, fn, result);
+    } else {
+      result = fn(result, value);
+    }
   }
+  return result
+};
+
+var mapObject = function (obj, fn) { return Object.keys(obj).map(
+  function (key) { return fn(key, obj[key]); }
 ).reduce(
   function (acc, curr) { return extend(acc, curr); },
   {}
 ); };
 
 var deepifyKeys = function (obj) { return mapObject(obj,
-  function (ref) {
-    var key = ref[0];
-    var val = ref[1];
-
-    return key.split('-').reverse().reduce(
-    function (object$$1, key) { return (( obj = {}, obj[key] = object$$1, obj ))
-      var obj; },
-    val
-  );
+  function (key, val) {
+    var dashIndex = key.indexOf('-');
+    if (dashIndex > -1) {
+      var moduleData = {};
+      moduleData[key.slice(dashIndex + 1)] = val;
+      return ( obj = {}, obj[key.slice(0, dashIndex)] = moduleData, obj )
+      var obj;
+    }
+    return ( obj$1 = {}, obj$1[key] = val, obj$1 )
+    var obj$1;
   }
 ); };
 
-var renameMod = function (name) {
-  switch (name) {
-    case 'data': return 'dataset'
-    default: return name
-  }
-};
-
 var flatifyKeys = function (obj) { return mapObject(obj,
-  function (ref) {
-    var mod = ref[0];
-    var data = ref[1];
-
-    return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
+  function (mod, data) { return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
     flatifyKeys(data),
-    function (ref) {
-      var key = ref[0];
-      var val = ref[1];
-
-      return (( obj = {}, obj[(mod + "-" + key)] = val, obj ))
-      var obj;
-    }
+    function (key, val) { return (( obj = {}, obj[(mod + "-" + key)] = val, obj ))
+      var obj; }
   )
-    var obj;
-  }
+    var obj; }
 ); };
 
 var omit = function (key, obj) { return mapObject(obj,
-  function (ref) {
-    var mod = ref[0];
-    var data = ref[1];
-
-    return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {}
-    var obj;
-  }
+  function (mod, data) { return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {}
+    var obj; }
 ); };
 
 // Const fnName = (...params) => guard ? default : ...
@@ -135,25 +107,13 @@ var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
     }
   ); };
 
-var considerData = function (data) { return mapObject(
-  mapObject(data, function (ref) {
-    var mod = ref[0];
-    var data = ref[1];
-
-    var key = renameMod(mod);
+var considerData = function (data) {
+  return !data.data ? data : mapObject(data, function (mod, data) {
+    var key = mod === 'data' ? 'dataset' : mod;
     return (( obj = {}, obj[key] = data, obj ))
     var obj;
-  }),
-  function (ref) {
-    var mod = ref[0];
-    var data = ref[1];
-
-    return mod !== 'data' ? ( obj = {}, obj[mod] = data, obj ) :
-    flatifyKeys(( obj$1 = {}, obj$1[mod] = data, obj$1 ))
-    var obj;
-    var obj$1;
-  }
-); };
+  })
+};
 
 var considerAria = function (data) { return data.attrs || data.aria ? omit('aria',
   assign(data, {
@@ -162,59 +122,53 @@ var considerAria = function (data) { return data.attrs || data.aria ? omit('aria
 ) : data; };
 
 var considerProps = function (data) { return mapObject(data,
-  function (ref) {
-    var key = ref[0];
-    var val = ref[1];
-
-    return object(val) ? ( obj = {}, obj[key] = val, obj ) :
+  function (key, val) { return object(val) ? ( obj = {}, obj[key] = val, obj ) :
     { props: ( obj$1 = {}, obj$1[key] = val, obj$1 ) }
     var obj;
-    var obj$1;
-  }
+    var obj$1; }
 ); };
 
-var rewrites = ['for', 'role', 'tabindex'];
+var rewritesMap = { for: 1, role: 1, tabindex: 1 };
 
 var considerAttrs = function (data) { return mapObject(data,
-    function (ref) {
-      var key = ref[0];
-      var data = ref[1];
-
-      return !rewrites.includes(key) ? ( obj = {}, obj[key] = data, obj ) : {
+    function (key, data) { return !(key in rewritesMap) ? ( obj = {}, obj[key] = data, obj ) : {
       attrs: extend(data.attrs, ( obj$1 = {}, obj$1[key] = data, obj$1 ))
     }
       var obj;
-      var obj$1;
-  }
+      var obj$1; }
 ); };
 
-var considerKey = function (data) { return omit('key', data); };
+var considerKey = function (data) {
+  return 'key' in data ? omit('key', data) : data
+};
 
-var sanitizeData = function (data) { return !object(data) ? {} :
-  considerProps(considerAria(considerData(considerAttrs(considerKey(deepifyKeys(data)))))); };
+var sanitizeData = function (data) { return considerProps(considerAria(considerData(considerAttrs(considerKey(deepifyKeys(data)))))); };
 
-var sanitizeText = function (children) { return !array(children) || children.length > 1 || !text(children[0]) ? undefined :
-  children[0]; };
+var sanitizeText = function (children) { return children.length > 1 || !text(children[0]) ? undefined : children[0]; };
 
-var sanitizeChildren = function (children) { return !array(children) || text(sanitizeText(children)) ? undefined :
-  flatten(children).map(
-    function (child) { return vnode(child) ? child :
-      createTextElement(child); }
-  ); };
+var sanitizeChildren = function (children) { return reduceDeep(children, function (acc, child) {
+  var vnode$$1 = vnode(child) ? child : createTextElement(child);
+  acc.push(vnode$$1);
+  return acc
+}
+, []); };
 
 var createElement = function (sel, data) {
   var children = [], len = arguments.length - 2;
   while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
 
-  if ( data === void 0 ) data = {};
-  return fun(sel) ? sel(data, children) : considerSvg({
-  sel: sel,
-  data: sanitizeData(data),
-  children: sanitizeChildren(children),
-  text: sanitizeText(children),
-  elm: undefined,
-  key: data ? data.key : undefined
-});
+  if (fun(sel)) {
+    return sel(data || {}, children)
+  }
+  var text$$1 = sanitizeText(children);
+  return considerSvg({
+    sel: sel,
+    data: data ? sanitizeData(data) : {},
+    children: text$$1 ? undefined : sanitizeChildren(children),
+    text: text$$1,
+    elm: undefined,
+    key: data ? data.key : undefined
+  })
 };
 
 var index = {
