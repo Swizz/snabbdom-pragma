@@ -13,17 +13,18 @@ const createTextElement = (text) => !is.text(text) ? undefined : {
   key: undefined
 }
 
-const considerSvg = (vnode) => !is.svg(vnode) ? vnode :
+const transformSvg = (vnode) => {
   fn.assign(vnode,
     { data: fn.omit('props', fn.extend(vnode.data,
       { ns: 'http://www.w3.org/2000/svg', attrs: fn.omit('className', fn.extend(vnode.data.props,
         { class: vnode.data.props ? vnode.data.props.className : undefined }
       )) }
-    )) },
-    { children: is.undefinedv(vnode.children) ? undefined :
-      vnode.children.map((child) => considerSvg(child))
-    }
+    )) }
   )
+  if (vnode.children) {
+    vnode.children.forEach(transformSvg)
+  }
+}
 
 const considerData = (data) => {
   return !data.data ? data : fn.mapObject(data, (mod, data) => {
@@ -71,14 +72,18 @@ export const createElement = (sel, data, ...children) => {
     return sel(data || {}, children)
   }
   const text = sanitizeText(children)
-  return considerSvg({
+  const vnode = {
     sel,
     data: data ? sanitizeData(data) : {},
     children: text ? undefined : sanitizeChildren(children),
     text,
     elm: undefined,
     key: data ? data.key : undefined
-  })
+  }
+  if (sel === 'svg') {
+    transformSvg(vnode)
+  }
+  return vnode
 }
 
 export default {

@@ -1,7 +1,5 @@
 import _extend from 'extend';
 
-var undefinedv = function (v) { return v === undefined; };
-
 var number = function (v) { return typeof v === 'number'; };
 
 var string = function (v) { return typeof v === 'string'; };
@@ -16,12 +14,8 @@ var fun = function (v) { return typeof v === 'function'; };
 
 var vnode = function (v) { return object(v) && 'sel' in v && 'data' in v && 'children' in v && 'text' in v; };
 
-var svgPropsMap = { svg: 1, circle: 1, ellipse: 1, line: 1, polygon: 1,
-  polyline: 1, rect: 1, g: 1, path: 1, text: 1 };
-
-var svg = function (v) { return v.sel in svgPropsMap; };
-
 // TODO: stop using extend here
+
 var extend = function () {
   var objs = [], len = arguments.length;
   while ( len-- ) objs[ len ] = arguments[ len ];
@@ -58,30 +52,39 @@ var mapObject = function (obj, fn) { return Object.keys(obj).map(
 
 var deepifyKeys = function (obj) { return mapObject(obj,
   function (key, val) {
+    var obj, obj$1;
+
     var dashIndex = key.indexOf('-');
     if (dashIndex > -1) {
       var moduleData = {};
       moduleData[key.slice(dashIndex + 1)] = val;
       return ( obj = {}, obj[key.slice(0, dashIndex)] = moduleData, obj )
-      var obj;
     }
     return ( obj$1 = {}, obj$1[key] = val, obj$1 )
-    var obj$1;
   }
 ); };
 
 var flatifyKeys = function (obj) { return mapObject(obj,
-  function (mod, data) { return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
+  function (mod, data) {
+    var obj;
+
+    return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
     flatifyKeys(data),
-    function (key, val) { return (( obj = {}, obj[(mod + "-" + key)] = val, obj ))
-      var obj; }
-  )
-    var obj; }
+    function (key, val) {
+      var obj;
+
+      return (( obj = {}, obj[(mod + "-" + key)] = val, obj ));
+    }
+  );
+  }
 ); };
 
 var omit = function (key, obj) { return mapObject(obj,
-  function (mod, data) { return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {}
-    var obj; }
+  function (mod, data) {
+    var obj;
+
+    return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {};
+  }
 ); };
 
 // Const fnName = (...params) => guard ? default : ...
@@ -95,23 +98,25 @@ var createTextElement = function (text$$1) { return !text(text$$1) ? undefined :
   key: undefined
 }; };
 
-var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
+var transformSvg = function (vnode$$1) {
   assign(vnode$$1,
     { data: omit('props', extend(vnode$$1.data,
       { ns: 'http://www.w3.org/2000/svg', attrs: omit('className', extend(vnode$$1.data.props,
         { class: vnode$$1.data.props ? vnode$$1.data.props.className : undefined }
       )) }
-    )) },
-    { children: undefinedv(vnode$$1.children) ? undefined :
-      vnode$$1.children.map(function (child) { return considerSvg(child); })
-    }
-  ); };
+    )) }
+  );
+  if (vnode$$1.children) {
+    vnode$$1.children.forEach(transformSvg);
+  }
+};
 
 var considerData = function (data) {
   return !data.data ? data : mapObject(data, function (mod, data) {
+    var obj;
+
     var key = mod === 'data' ? 'dataset' : mod;
     return (( obj = {}, obj[key] = data, obj ))
-    var obj;
   })
 };
 
@@ -122,20 +127,24 @@ var considerAria = function (data) { return data.attrs || data.aria ? omit('aria
 ) : data; };
 
 var considerProps = function (data) { return mapObject(data,
-  function (key, val) { return object(val) ? ( obj = {}, obj[key] = val, obj ) :
-    { props: ( obj$1 = {}, obj$1[key] = val, obj$1 ) }
-    var obj;
-    var obj$1; }
+  function (key, val) {
+    var obj, obj$1;
+
+    return object(val) ? ( obj = {}, obj[key] = val, obj ) :
+    { props: ( obj$1 = {}, obj$1[key] = val, obj$1 ) };
+  }
 ); };
 
 var rewritesMap = { for: 1, role: 1, tabindex: 1 };
 
 var considerAttrs = function (data) { return mapObject(data,
-    function (key, data) { return !(key in rewritesMap) ? ( obj = {}, obj[key] = data, obj ) : {
+    function (key, data) {
+      var obj, obj$1;
+
+      return !(key in rewritesMap) ? ( obj = {}, obj[key] = data, obj ) : {
       attrs: extend(data.attrs, ( obj$1 = {}, obj$1[key] = data, obj$1 ))
-    }
-      var obj;
-      var obj$1; }
+    };
+  }
 ); };
 
 var considerKey = function (data) {
@@ -161,18 +170,23 @@ var createElement = function (sel, data) {
     return sel(data || {}, children)
   }
   var text$$1 = sanitizeText(children);
-  return considerSvg({
+  var vnode$$1 = {
     sel: sel,
     data: data ? sanitizeData(data) : {},
     children: text$$1 ? undefined : sanitizeChildren(children),
     text: text$$1,
     elm: undefined,
     key: data ? data.key : undefined
-  })
+  };
+  if (sel === 'svg') {
+    transformSvg(vnode$$1);
+  }
+  return vnode$$1
 };
 
 var index = {
   createElement: createElement
 };
 
-export { createElement };export default index;
+export default index;
+export { createElement };

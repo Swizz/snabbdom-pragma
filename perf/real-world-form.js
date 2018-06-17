@@ -1,8 +1,8 @@
 /* eslint import/no-unresolved: 0 */
 
 const Benchmark = require('benchmark')
-const baseCreateElement = require('./snnabdom-base').createElement
-const newCreateElement = require('./snnabdom-new').createElement
+const baseCreateElement = require('./snabbdom-base').createElement
+const newCreateElement = require('./snabbdom-new').createElement
 
 function realWorldForm(createElement) {
   const state = {}

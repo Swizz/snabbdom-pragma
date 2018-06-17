@@ -2,8 +2,8 @@
 
 const Benchmark = require('benchmark')
 const h = require('snabbdom/h').default
-const baseCreateElement = require('./snnabdom-base').createElement
-const newCreateElement = require('./snnabdom-new').createElement
+const baseCreateElement = require('./snabbdom-base').createElement
+const newCreateElement = require('./snabbdom-new').createElement
 
 function simplePropsHyper() {
   return h('div', { props: { href: 'xxxxx', target: 'route' } }, [
