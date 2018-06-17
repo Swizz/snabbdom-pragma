@@ -25,10 +25,10 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "benchmark": "^2.1.4",
-    "buble": "^0.17.3",
+    "buble": "^0.19.3",
     "eslint-config-xo-swizz": "^0.11.0",
-    "rimraf": "^2.6.1",
-    "rollup": "^0.41.3",
+    "rollup": "^0.60.7",
+    "rollup-plugin-buble": "^0.19.2",
     "simple-git": "^1.92.0",
     "snabbdom": "^0.6.7",
     "traceur": "^0.0.111",
@@ -42,10 +42,7 @@
     "lint": "./node_modules/.bin/xo",
     "test:prebuild": "ava --match \"trans -*\" --match \"src -*\" --match \"utils -*\"",
     "test:postbuild": "ava --match \"dist -*\"",
-    "transpile": "./node_modules/.bin/buble -i src/ -o lib/ --no modules --objectAssign fn.assign",
-    "modules": "rollup -i lib/index.js -o dist/index.js -f cjs && rollup -i lib/index.js -o dist/index.es6.js -f es",
-    "clean": "./node_modules/.bin/rimraf 'lib/'",
-    "build": "npm run transpile && npm run modules && npm run clean",
+    "build": "rollup --config",
     "make": "npm run lint && npm run test:prebuild && npm run build && npm run test:postbuild",
     "perf:all": "node perf/build-branches && node perf/run",
     "perf": "node perf/run"
@@ -64,7 +61,8 @@
     "extends": "xo-swizz",
     "rules": {
       "import/no-dynamic-require": "off",
-      "capitalized-comments": "off"
+      "capitalized-comments": "off",
+      "linebreak-style": "off"
     },
     "ignores": [
       "test/**/transform-*.js"
