@@ -22,6 +22,7 @@ var svgPropsMap = { svg: 1, circle: 1, ellipse: 1, line: 1, polygon: 1,
 var svg = function (v) { return v.sel in svgPropsMap; };
 
 // TODO: stop using extend here
+
 var extend = function () {
   var objs = [], len = arguments.length;
   while ( len-- ) objs[ len ] = arguments[ len ];
@@ -58,30 +59,39 @@ var mapObject = function (obj, fn) { return Object.keys(obj).map(
 
 var deepifyKeys = function (obj) { return mapObject(obj,
   function (key, val) {
+    var obj, obj$1;
+
     var dashIndex = key.indexOf('-');
     if (dashIndex > -1) {
       var moduleData = {};
       moduleData[key.slice(dashIndex + 1)] = val;
       return ( obj = {}, obj[key.slice(0, dashIndex)] = moduleData, obj )
-      var obj;
     }
     return ( obj$1 = {}, obj$1[key] = val, obj$1 )
-    var obj$1;
   }
 ); };
 
 var flatifyKeys = function (obj) { return mapObject(obj,
-  function (mod, data) { return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
+  function (mod, data) {
+    var obj;
+
+    return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
     flatifyKeys(data),
-    function (key, val) { return (( obj = {}, obj[(mod + "-" + key)] = val, obj ))
-      var obj; }
-  )
-    var obj; }
+    function (key, val) {
+      var obj;
+
+      return (( obj = {}, obj[(mod + "-" + key)] = val, obj ));
+    }
+  );
+  }
 ); };
 
 var omit = function (key, obj) { return mapObject(obj,
-  function (mod, data) { return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {}
-    var obj; }
+  function (mod, data) {
+    var obj;
+
+    return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {};
+  }
 ); };
 
 // Const fnName = (...params) => guard ? default : ...
@@ -109,9 +119,10 @@ var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
 
 var considerData = function (data) {
   return !data.data ? data : mapObject(data, function (mod, data) {
+    var obj;
+
     var key = mod === 'data' ? 'dataset' : mod;
     return (( obj = {}, obj[key] = data, obj ))
-    var obj;
   })
 };
 
@@ -122,20 +133,24 @@ var considerAria = function (data) { return data.attrs || data.aria ? omit('aria
 ) : data; };
 
 var considerProps = function (data) { return mapObject(data,
-  function (key, val) { return object(val) ? ( obj = {}, obj[key] = val, obj ) :
-    { props: ( obj$1 = {}, obj$1[key] = val, obj$1 ) }
-    var obj;
-    var obj$1; }
+  function (key, val) {
+    var obj, obj$1;
+
+    return object(val) ? ( obj = {}, obj[key] = val, obj ) :
+    { props: ( obj$1 = {}, obj$1[key] = val, obj$1 ) };
+  }
 ); };
 
 var rewritesMap = { for: 1, role: 1, tabindex: 1 };
 
 var considerAttrs = function (data) { return mapObject(data,
-    function (key, data) { return !(key in rewritesMap) ? ( obj = {}, obj[key] = data, obj ) : {
+    function (key, data) {
+      var obj, obj$1;
+
+      return !(key in rewritesMap) ? ( obj = {}, obj[key] = data, obj ) : {
       attrs: extend(data.attrs, ( obj$1 = {}, obj$1[key] = data, obj$1 ))
-    }
-      var obj;
-      var obj$1; }
+    };
+  }
 ); };
 
 var considerKey = function (data) {
@@ -175,4 +190,5 @@ var index = {
   createElement: createElement
 };
 
-export { createElement };export default index;
+export default index;
+export { createElement };
