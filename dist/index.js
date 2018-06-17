@@ -6,8 +6,6 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var _extend = _interopDefault(require('extend'));
 
-var undefinedv = function (v) { return v === undefined; };
-
 var number = function (v) { return typeof v === 'number'; };
 
 var string = function (v) { return typeof v === 'string'; };
@@ -21,11 +19,6 @@ var object = function (v) { return typeof v === 'object' && v !== null; };
 var fun = function (v) { return typeof v === 'function'; };
 
 var vnode = function (v) { return object(v) && 'sel' in v && 'data' in v && 'children' in v && 'text' in v; };
-
-var svgPropsMap = { svg: 1, circle: 1, ellipse: 1, line: 1, polygon: 1,
-  polyline: 1, rect: 1, g: 1, path: 1, text: 1 };
-
-var svg = function (v) { return v.sel in svgPropsMap; };
 
 // TODO: stop using extend here
 
@@ -111,17 +104,18 @@ var createTextElement = function (text$$1) { return !text(text$$1) ? undefined :
   key: undefined
 }; };
 
-var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
+var transformSvg = function (vnode$$1) {
   assign(vnode$$1,
     { data: omit('props', extend(vnode$$1.data,
       { ns: 'http://www.w3.org/2000/svg', attrs: omit('className', extend(vnode$$1.data.props,
         { class: vnode$$1.data.props ? vnode$$1.data.props.className : undefined }
       )) }
-    )) },
-    { children: undefinedv(vnode$$1.children) ? undefined :
-      vnode$$1.children.map(function (child) { return considerSvg(child); })
-    }
-  ); };
+    )) }
+  );
+  if (vnode$$1.children) {
+    vnode$$1.children.forEach(transformSvg);
+  }
+};
 
 var considerData = function (data) {
   return !data.data ? data : mapObject(data, function (mod, data) {
@@ -182,14 +176,18 @@ var createElement = function (sel, data) {
     return sel(data || {}, children)
   }
   var text$$1 = sanitizeText(children);
-  return considerSvg({
+  var vnode$$1 = {
     sel: sel,
     data: data ? sanitizeData(data) : {},
     children: text$$1 ? undefined : sanitizeChildren(children),
     text: text$$1,
     elm: undefined,
     key: data ? data.key : undefined
-  })
+  };
+  if (sel === 'svg') {
+    transformSvg(vnode$$1);
+  }
+  return vnode$$1
 };
 
 var index = {
