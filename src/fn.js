@@ -27,10 +27,10 @@ export const mapObject = (obj, fn) => Object.keys(obj).map(
   {}
 )
 
-export const deepifyKeys = (obj) => mapObject(obj,
+export const deepifyKeys = (obj, modules) => mapObject(obj,
   (key, val) => {
     const dashIndex = key.indexOf('-')
-    if (dashIndex > -1) {
+    if (dashIndex > -1 && modules[key.slice(0, dashIndex)] !== undefined) {
       const moduleData = {
         [key.slice(dashIndex + 1)]: val
       }

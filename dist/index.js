@@ -62,10 +62,10 @@ var mapObject = function (obj, fn) { return Object.keys(obj).map(
   {}
 ); };
 
-var deepifyKeys = function (obj) { return mapObject(obj,
+var deepifyKeys = function (obj, modules) { return mapObject(obj,
   function (key, val) {
     var dashIndex = key.indexOf('-');
-    if (dashIndex > -1) {
+    if (dashIndex > -1 && modules[key.slice(0, dashIndex)] !== undefined) {
       var moduleData = {};
       moduleData[key.slice(dashIndex + 1)] = val;
       return ( obj = {}, obj[key.slice(0, dashIndex)] = moduleData, obj )
@@ -76,14 +76,7 @@ var deepifyKeys = function (obj) { return mapObject(obj,
   }
 ); };
 
-var flatifyKeys = function (obj) { return mapObject(obj,
-  function (mod, data) { return !object(data) ? (( obj = {}, obj[mod] = data, obj )) : mapObject(
-    flatifyKeys(data),
-    function (key, val) { return (( obj = {}, obj[(mod + "-" + key)] = val, obj ))
-      var obj; }
-  )
-    var obj; }
-); };
+
 
 var omit = function (key, obj) { return mapObject(obj,
   function (mod, data) { return mod !== key ? (( obj = {}, obj[mod] = data, obj )) : {}
@@ -113,42 +106,43 @@ var considerSvg = function (vnode$$1) { return !svg(vnode$$1) ? vnode$$1 :
     }
   ); };
 
-var considerData = function (data) {
-  return !data.data ? data : mapObject(data, function (mod, data) {
-    var key = mod === 'data' ? 'dataset' : mod;
-    return (( obj = {}, obj[key] = data, obj ))
-    var obj;
-  })
+var rewrites = {
+  for: 'attrs',
+  role: 'attrs',
+  tabindex: 'attrs',
+  'aria-*': 'attrs',
+  key: null
 };
 
-var considerAria = function (data) { return data.attrs || data.aria ? omit('aria',
-  assign(data, {
-    attrs: extend(data.attrs, data.aria ? flatifyKeys({ aria: data.aria }) : {})
-  })
-) : data; };
-
-var considerProps = function (data) { return mapObject(data,
-  function (key, val) { return object(val) ? ( obj = {}, obj[key] = val, obj ) :
-    { props: ( obj$1 = {}, obj$1[key] = val, obj$1 ) }
+var rewriteModules = function (data, modules) { return mapObject(data, function (key, val) {
+  var inner = {};
+  inner[key] = val;
+  if (rewrites[key] && modules[rewrites[key]] !== undefined) {
+    return ( obj = {}, obj[rewrites[key]] = inner, obj )
     var obj;
-    var obj$1; }
-); };
-
-var rewritesMap = { for: 1, role: 1, tabindex: 1 };
-
-var considerAttrs = function (data) { return mapObject(data,
-    function (key, data) { return !(key in rewritesMap) ? ( obj = {}, obj[key] = data, obj ) : {
-      attrs: extend(data.attrs, ( obj$1 = {}, obj$1[key] = data, obj$1 ))
+  }
+  if (rewrites[key] === null) {
+    return {}
+  }
+  var keys = Object.keys(rewrites);
+  for (var i = 0; i < keys.length; i++) {
+    var k = keys[i];
+    if (k.charAt(k.length - 1) === '*' && key.indexOf(k.slice(0, -1)) === 0 && modules[rewrites[k]] !== undefined) {
+      return ( obj$1 = {}, obj$1[rewrites[k]] = inner, obj$1 )
+      var obj$1;
     }
-      var obj;
-      var obj$1; }
-); };
+  }
+  if (modules[key] !== undefined) {
+    return ( obj$2 = {}, obj$2[modules[key] ? modules[key] : key] = val, obj$2 )
+    var obj$2;
+  }
+  if (modules.props !== undefined) {
+    return { props: inner }
+  }
+  return inner
+}); };
 
-var considerKey = function (data) {
-  return 'key' in data ? omit('key', data) : data
-};
-
-var sanitizeData = function (data) { return considerProps(considerAria(considerData(considerAttrs(considerKey(deepifyKeys(data)))))); };
+var sanitizeData = function (data, modules) { return considerSvg(rewriteModules(deepifyKeys(data, modules), modules)); };
 
 var sanitizeText = function (children) { return children.length > 1 || !text(children[0]) ? undefined : children[0]; };
 
@@ -159,27 +153,43 @@ var sanitizeChildren = function (children) { return reduceDeep(children, functio
 }
 , []); };
 
-var createElement = function (sel, data) {
-  var children = [], len = arguments.length - 2;
-  while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
-
-  if (fun(sel)) {
-    return sel(data || {}, children)
-  }
-  var text$$1 = sanitizeText(children);
-  return considerSvg({
-    sel: sel,
-    data: data ? sanitizeData(data) : {},
-    children: text$$1 ? undefined : sanitizeChildren(children),
-    text: text$$1,
-    elm: undefined,
-    key: data ? data.key : undefined
-  })
+var defaultModules = {
+  attrs: '',
+  props: '',
+  class: '',
+  data: 'dataset',
+  style: '',
+  hook: '',
+  on: ''
 };
+
+var createElementWithModules = function (modules) {
+  return function (sel, data) {
+    var children = [], len = arguments.length - 2;
+    while ( len-- > 0 ) children[ len ] = arguments[ len + 2 ];
+
+    if (fun(sel)) {
+      return sel(data || {}, children)
+    }
+    var text$$1 = sanitizeText(children, modules);
+    return considerSvg({
+      sel: sel,
+      data: data ? sanitizeData(data, modules) : {},
+      children: text$$1 ? undefined : sanitizeChildren(children),
+      text: text$$1,
+      elm: undefined,
+      key: data ? data.key : undefined
+    })
+  }
+};
+
+var createElement = createElementWithModules(defaultModules);
 
 var index = {
-  createElement: createElement
+  createElement: createElement,
+  createElementWithModules: createElementWithModules
 };
 
+exports.createElementWithModules = createElementWithModules;
 exports.createElement = createElement;
 exports['default'] = index;
