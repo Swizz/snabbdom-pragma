@@ -44,6 +44,7 @@ Snabbdom-pragma draws its strength thanks to the [Snabbdom](https://github.com/s
     * [Modules object](#modules-object)
     * [Modules attribute](#modules-object)
     * [Both](#both)
+    * [Custom Modules](#custom-modules)
   - ['NotReact' Features](#notreact-features)
     * [Components](#components)
   - [Misc](#misc)
@@ -204,6 +205,26 @@ const vnode = Snabbdom.createElement('div', { 'style-color': 'red', style: { bac
 /* Similar to */
 const vnode = h('div', { style: { color: 'red', background: 'blue' } }, [])
 ```
+
+### Custom Modules
+Custom modules are supported through the `createElementWithModules` method.
+You will need to register this method as pragma instead of the `createElement`.
+```js
+    pragma: 'Snabbdom.createElementWithModules("ALIAS_1": "MODULE_1", "ALIAS_2": "MODULE_2", ...)'
+```
+Then use
+```jsx
+/* written */
+const vnode = <div style-color="red"></div>
+
+/* Once Transpiled */
+const vnode = Snabbdom.createElementWithModules({ 'style': '' })('div', { style: { 'color': 'red' } })
+
+/* Similar to */
+const vnode = h('div', { style: { color: 'red' } }, [])
+```
+
+
 
 ## 'NotReact' Features
 In React you can create components and use them inside other components, using the `React.createClass` function.
