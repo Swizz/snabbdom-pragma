@@ -1,6 +1,6 @@
 {
   "name": "snabbdom-pragma",
-  "version": "2.7.0",
+  "version": "2.8.0",
   "description": "'NotReact.createElement' pragma although for snabbdom",
   "keywords": [
     "snabbdom",

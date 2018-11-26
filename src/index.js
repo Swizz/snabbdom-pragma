@@ -25,37 +25,39 @@ const considerSvg = (vnode) => !is.svg(vnode) ? vnode :
     }
   )
 
-const considerData = (data) => {
-  return !data.data ? data : fn.mapObject(data, (mod, data) => {
-    const key = mod === 'data' ? 'dataset' : mod
-    return ({ [key]: data })
-  })
+const rewrites = {
+  for: 'attrs',
+  role: 'attrs',
+  tabindex: 'attrs',
+  'aria-*': 'attrs',
+  key: null
 }
 
-const considerAria = (data) => data.attrs || data.aria ? fn.omit('aria',
-  fn.assign(data, {
-    attrs: fn.extend(data.attrs, data.aria ? fn.flatifyKeys({ aria: data.aria }) : {})
-  })
-) : data
-
-const considerProps = (data) => fn.mapObject(data,
-  (key, val) => is.object(val) ? { [key]: val } :
-    { props: { [key]: val } }
-)
-
-const rewritesMap = { for: 1, role: 1, tabindex: 1 }
-
-const considerAttrs = (data) => fn.mapObject(data,
-    (key, data) => !(key in rewritesMap) ? { [key]: data } : {
-      attrs: fn.extend(data.attrs, { [key]: data })
+const rewriteModules = (data, modules) => fn.mapObject(data, (key, val) => {
+  const inner = { [key]: val }
+  if (rewrites[key] && modules[rewrites[key]] !== undefined) {
+    return { [rewrites[key]]: inner }
+  }
+  if (rewrites[key] === null) {
+    return {}
+  }
+  const keys = Object.keys(rewrites)
+  for (let i = 0; i < keys.length; i++) {
+    const k = keys[i]
+    if (k.charAt(k.length - 1) === '*' && key.indexOf(k.slice(0, -1)) === 0 && modules[rewrites[k]] !== undefined) {
+      return { [rewrites[k]]: inner }
     }
-)
+  }
+  if (modules[key] !== undefined) {
+    return { [modules[key] ? modules[key] : key]: val }
+  }
+  if (modules.props !== undefined) {
+    return { props: inner }
+  }
+  return inner
+})
 
-const considerKey = (data) => {
-  return 'key' in data ? fn.omit('key', data) : data
-}
-
-const sanitizeData = (data) => considerProps(considerAria(considerData(considerAttrs(considerKey(fn.deepifyKeys(data))))))
+const sanitizeData = (data, modules) => considerSvg(rewriteModules(fn.deepifyKeys(data, modules), modules))
 
 const sanitizeText = (children) => children.length > 1 || !is.text(children[0]) ? undefined : children[0]
 
@@ -66,21 +68,36 @@ const sanitizeChildren = (children) => fn.reduceDeep(children, (acc, child) => {
 }
 , [])
 
-export const createElement = (sel, data, ...children) => {
-  if (is.fun(sel)) {
-    return sel(data || {}, children)
-  }
-  const text = sanitizeText(children)
-  return considerSvg({
-    sel,
-    data: data ? sanitizeData(data) : {},
-    children: text ? undefined : sanitizeChildren(children),
-    text,
-    elm: undefined,
-    key: data ? data.key : undefined
-  })
+const defaultModules = {
+  attrs: '',
+  props: '',
+  class: '',
+  data: 'dataset',
+  style: '',
+  hook: '',
+  on: ''
 }
 
+export const createElementWithModules = (modules) => {
+  return (sel, data, ...children) => {
+    if (is.fun(sel)) {
+      return sel(data || {}, children)
+    }
+    const text = sanitizeText(children, modules)
+    return considerSvg({
+      sel,
+      data: data ? sanitizeData(data, modules) : {},
+      children: text ? undefined : sanitizeChildren(children),
+      text,
+      elm: undefined,
+      key: data ? data.key : undefined
+    })
+  }
+}
+
+export const createElement = createElementWithModules(defaultModules)
+
 export default {
-  createElement
+  createElement,
+  createElementWithModules
 }
