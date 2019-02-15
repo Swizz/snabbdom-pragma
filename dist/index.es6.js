@@ -169,7 +169,7 @@ var createElementWithModules = function (modules) {
     return considerSvg({
       sel: sel,
       data: data ? sanitizeData(data, modules) : {},
-      children: text$$1 ? undefined : sanitizeChildren(children),
+      children: !undefinedv(text$$1) ? undefined : sanitizeChildren(children),
       text: text$$1,
       elm: undefined,
       key: data ? data.key : undefined
