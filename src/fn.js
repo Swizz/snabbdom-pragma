@@ -37,6 +37,11 @@ export const deepifyKeys = (obj, modules) => mapObject(obj,
       return {
         [key.slice(0, dashIndex)]: moduleData
       }
+    } else if (key === 'dataset' && modules.data !== undefined) {
+      // Allow users to specify data-* attributes with `dataset`
+      return {
+        data: { ...val }
+      }
     }
     return { [key]: val }
   }
