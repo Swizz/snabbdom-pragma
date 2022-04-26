@@ -97,7 +97,7 @@ Snabbdom-pragma works fine and is fully tested and typed for [Typescript](https:
 ```js
 typescript.transpileModule(input, {
   compilerOptions: {
-    jsx: 'react',
+    jsx: 'Snabbdom.createElement',
     jsxFactory: 'Snabbdom.createElement'
   }
 })
