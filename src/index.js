@@ -59,7 +59,7 @@ const rewriteModules = (data, modules) => fn.mapObject(data, (key, val) => {
 
 const sanitizeData = (data, modules) => considerSvg(rewriteModules(fn.deepifyKeys(data, modules), modules))
 
-const sanitizeText = (children) => children.length > 1 || !is.text(children[0]) ? undefined : children[0]
+const sanitizeText = (children) => children.length > 1 || !is.text(children[0]) ? undefined : children[0].toString()
 
 const sanitizeChildren = (children) => fn.reduceDeep(children, (acc, child) => {
   const vnode = is.vnode(child) ? child : createTextElement(child)
